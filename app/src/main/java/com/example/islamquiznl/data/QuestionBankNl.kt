@@ -1,0 +1,1334 @@
+package com.example.islamquiznl.data
+
+// Nederlandse islamitische vragenbank - starterbestand.
+// Controleer de vragen inhoudelijk met betrouwbare bronnen/geleerden voordat je publiceert.
+
+enum class QuizCategory {
+    AKHLAAQ, GENERAL, HADITH, PRAYER_WUDU, PROPHETS, QURAN, RAMADAN, SAHABA, SEERAH
+}
+
+enum class Difficulty {
+    EASY, MEDIUM, HARD
+}
+
+data class Question(
+    val id: Int,
+    val category: QuizCategory,
+    val difficulty: Difficulty,
+    val question: String,
+    val answers: List<String>,
+    val correctAnswerIndex: Int,
+    val explanation: String,
+    val hint: String,
+    val extraHint: String,
+    val sourceCategory: String,
+    val sourceText: String? = null
+)
+
+object QuestionBankNl {
+
+    val questions: List<Question> = listOf(
+
+        Question(
+            id = 1,
+            category = QuizCategory.QURAN,
+            difficulty = Difficulty.EASY,
+            question = "Wat is de eerste surah van de Qur'an?",
+            answers = listOf("Al-Baqarah", "Al-Fātiḥah", "Al-Ikhlāṣ", "Yāsīn"),
+            correctAnswerIndex = 1,
+            explanation = "Al-Fātiḥah staat aan het begin van de Qur'an en betekent 'De Opening'.",
+            hint = "Denk aan de surah waarmee het gebed begint.",
+            extraHint = "Deze surah wordt in elke rakʿah gereciteerd.",
+            sourceCategory = "Qur'an"
+        ),
+
+        Question(
+            id = 2,
+            category = QuizCategory.QURAN,
+            difficulty = Difficulty.EASY,
+            question = "Hoeveel juz' heeft de Qur'an?",
+            answers = listOf("20", "25", "30", "40"),
+            correctAnswerIndex = 2,
+            explanation = "De Qur'an is verdeeld in 30 juz', wat handig is voor recitatie en studie.",
+            hint = "Veel mensen lezen één juz' per dag in Ramadan.",
+            extraHint = "Het aantal is gelijk aan het aantal dagen van een gewone maand.",
+            sourceCategory = "Qur'an"
+        ),
+
+        Question(
+            id = 3,
+            category = QuizCategory.QURAN,
+            difficulty = Difficulty.EASY,
+            question = "Welke surah is de langste surah van de Qur'an?",
+            answers = listOf("Al-Baqarah", "Āl ʿImrān", "An-Nisā'", "Al-Mā'idah"),
+            correctAnswerIndex = 0,
+            explanation = "Surah Al-Baqarah is de langste surah van de Qur'an.",
+            hint = "De naam betekent 'De Koe'.",
+            extraHint = "Deze surah staat direct na Al-Fātiḥah.",
+            sourceCategory = "Qur'an"
+        ),
+
+        Question(
+            id = 4,
+            category = QuizCategory.QURAN,
+            difficulty = Difficulty.EASY,
+            question = "Welke surah is de kortste surah van de Qur'an?",
+            answers = listOf("Al-Falaq", "An-Nās", "Al-Kawthar", "Al-Ikhlāṣ"),
+            correctAnswerIndex = 2,
+            explanation = "Surah Al-Kawthar is de kortste surah van de Qur'an.",
+            hint = "Deze surah bestaat uit drie korte verzen.",
+            extraHint = "De naam verwijst naar een grote gunst die Allah aan de Profeet ﷺ gaf.",
+            sourceCategory = "Qur'an"
+        ),
+
+        Question(
+            id = 5,
+            category = QuizCategory.QURAN,
+            difficulty = Difficulty.EASY,
+            question = "Welke surah wordt vaak gereciteerd op vrijdag?",
+            answers = listOf("Al-Kahf", "Yūsuf", "Maryam", "Ṭāhā"),
+            correctAnswerIndex = 0,
+            explanation = "Surah Al-Kahf wordt vaak op vrijdag gereciteerd vanwege bekende overleveringen over haar deugd.",
+            hint = "Denk aan de surah met het verhaal van de mensen van de grot.",
+            extraHint = "De naam betekent 'De Grot'.",
+            sourceCategory = "Hadith/Qur'an"
+        ),
+
+        Question(
+            id = 6,
+            category = QuizCategory.QURAN,
+            difficulty = Difficulty.EASY,
+            question = "In welke taal is de Qur'an geopenbaard?",
+            answers = listOf("Perzisch", "Arabisch", "Hebreeuws", "Aramees"),
+            correctAnswerIndex = 1,
+            explanation = "De Qur'an is in duidelijke Arabische taal geopenbaard.",
+            hint = "De taal van de Qur'an is ook de taal van de recitatie in het gebed.",
+            extraHint = "Het is de taal waarin veel islamitische termen bekend zijn.",
+            sourceCategory = "Qur'an"
+        ),
+
+        Question(
+            id = 7,
+            category = QuizCategory.QURAN,
+            difficulty = Difficulty.EASY,
+            question = "Welke surah beschrijft kort en krachtig de eenheid van Allah?",
+            answers = listOf("Al-Ikhlāṣ", "Al-Falaq", "An-Nās", "Al-Masad"),
+            correctAnswerIndex = 0,
+            explanation = "Surah Al-Ikhlāṣ beschrijft de eenheid van Allah op een korte en krachtige manier.",
+            hint = "Deze surah begint met 'Qul huwa Allahu ahad'.",
+            extraHint = "Veel moslims kennen deze korte surah uit het hoofd.",
+            sourceCategory = "Qur'an"
+        ),
+
+        Question(
+            id = 8,
+            category = QuizCategory.QURAN,
+            difficulty = Difficulty.EASY,
+            question = "Welke twee surahs worden vaak de 'beschermende surahs' genoemd?",
+            answers = listOf("Al-Fīl en Quraysh", "Al-Falaq en An-Nās", "Yāsīn en Al-Mulk", "Al-Kahf en Maryam"),
+            correctAnswerIndex = 1,
+            explanation = "Al-Falaq en An-Nās worden vaak samen gereciteerd als bescherming.",
+            hint = "Ze staan helemaal aan het einde van de Qur'an.",
+            extraHint = "Ze beginnen allebei met 'Qul aʿūdhu'.",
+            sourceCategory = "Qur'an/Sunnah"
+        ),
+
+        Question(
+            id = 9,
+            category = QuizCategory.QURAN,
+            difficulty = Difficulty.EASY,
+            question = "Welke surah gaat over de geboorte en het verhaal van Maryam عليها السلام?",
+            answers = listOf("Maryam", "An-Nūr", "Al-Mujādilah", "Al-Ḥadīd"),
+            correctAnswerIndex = 0,
+            explanation = "Surah Maryam bevat het verhaal van Maryam عليها السلام en de geboorte van ʿĪsā عليه السلام.",
+            hint = "De surah draagt haar naam.",
+            extraHint = "Het is een bekende surah met een ontroerende recitatie.",
+            sourceCategory = "Qur'an"
+        ),
+
+        Question(
+            id = 10,
+            category = QuizCategory.QURAN,
+            difficulty = Difficulty.EASY,
+            question = "Wat betekent 'āyah' meestal in de context van de Qur'an?",
+            answers = listOf("Hoofdstuk", "Vers/teken", "Gebedstijd", "Overlevering"),
+            correctAnswerIndex = 1,
+            explanation = "Een āyah is een vers of teken in de Qur'an.",
+            hint = "Een surah bestaat uit meerdere āyāt.",
+            extraHint = "Het woord betekent ook 'teken'.",
+            sourceCategory = "Qur'an"
+        ),
+
+        Question(
+            id = 11,
+            category = QuizCategory.QURAN,
+            difficulty = Difficulty.MEDIUM,
+            question = "Welke surah bevat Āyat al-Kursī?",
+            answers = listOf("Al-Fātiḥah", "Al-Baqarah", "Āl ʿImrān", "An-Nisā'"),
+            correctAnswerIndex = 1,
+            explanation = "Āyat al-Kursī staat in Surah Al-Baqarah, vers 255.",
+            hint = "Het is in de langste surah van de Qur'an.",
+            extraHint = "Deze surah staat na Al-Fātiḥah.",
+            sourceCategory = "Qur'an 2:255"
+        ),
+
+        Question(
+            id = 12,
+            category = QuizCategory.QURAN,
+            difficulty = Difficulty.MEDIUM,
+            question = "Hoeveel surahs heeft de Qur'an?",
+            answers = listOf("100", "114", "120", "99"),
+            correctAnswerIndex = 1,
+            explanation = "De Qur'an heeft 114 surahs.",
+            hint = "Het is een veelvoud van 6.",
+            extraHint = "De eerste is Al-Fātiḥah, de laatste is An-Nās.",
+            sourceCategory = "Qur'an"
+        ),
+
+        Question(
+            id = 13,
+            category = QuizCategory.QURAN,
+            difficulty = Difficulty.MEDIUM,
+            question = "Welke engel bracht de Qur'an aan de Profeet ﷺ?",
+            answers = listOf("Mīkā'īl", "Jibrīl", "Isrāfīl", "ʿIzrā'īl"),
+            correctAnswerIndex = 1,
+            explanation = "Jibrīl عليه السلام bracht de openbaringen van de Qur'an aan de Profeet ﷺ.",
+            hint = "Hij is ook bekend als de engel van de openbaring.",
+            extraHint = "Hij daalde af in de grot van Hirā'.",
+            sourceCategory = "Qur'an/Seerah"
+        ),
+
+        Question(
+            id = 14,
+            category = QuizCategory.QURAN,
+            difficulty = Difficulty.MEDIUM,
+            question = "Welke surah wordt 'het hart van de Qur'an' genoemd?",
+            answers = listOf("Al-Baqarah", "Āl ʿImrān", "Yāsīn", "Al-Kahf"),
+            correctAnswerIndex = 2,
+            explanation = "Yāsīn wordt in sommige overleveringen 'het hart van de Qur'an' genoemd.",
+            hint = "Het is een bekende surah die vaak bij gelegenheden wordt gereciteerd.",
+            extraHint = "De naam bestaat uit twee Arabische letters.",
+            sourceCategory = "Hadith"
+        ),
+
+        Question(
+            id = 15,
+            category = QuizCategory.QURAN,
+            difficulty = Difficulty.MEDIUM,
+            question = "In welke maand werd de Qur'an geopenbaard?",
+            answers = listOf("Rajab", "Dhul-Hijjah", "Ramadan", "Muharram"),
+            correctAnswerIndex = 2,
+            explanation = "De Qur'an begon geopenbaard te worden in de maand Ramadan.",
+            hint = "Het is de heiligste maand van het islamitische jaar.",
+            extraHint = "Layla al-Qadr valt ook in deze maand.",
+            sourceCategory = "Qur'an 2:185"
+        ),
+
+        Question(
+            id = 16,
+            category = QuizCategory.QURAN,
+            difficulty = Difficulty.HARD,
+            question = "Welke surah bevat de langste āyah van de Qur'an?",
+            answers = listOf("Yāsīn", "Al-Baqarah", "An-Nisā'", "Al-Mā'idah"),
+            correctAnswerIndex = 1,
+            explanation = "De langste āyah is Āyat al-mudāyanah (2:282) in Surah Al-Baqarah.",
+            hint = "Het is de langste surah van de Qur'an.",
+            extraHint = "Deze āyah gaat over schulden.",
+            sourceCategory = "Qur'an 2:282"
+        ),
+
+        Question(
+            id = 17,
+            category = QuizCategory.QURAN,
+            difficulty = Difficulty.HARD,
+            question = "Hoeveel muqaṭṭaʿāt (losse letters) openers heeft de Qur'an?",
+            answers = listOf("14", "29", "7", "19"),
+            correctAnswerIndex = 1,
+            explanation = "Er zijn 29 surahs die beginnen met muqaṭṭaʿāt, losse letters waarvan de exacte betekenis alleen Allah kent.",
+            hint = "Denk aan surahs die beginnen met 'Alif Lam Mim'.",
+            extraHint = "Ze worden ook wel Ḥurūf al-muqaṭṭaʿāt genoemd.",
+            sourceCategory = "Qur'an"
+        ),
+
+        Question(
+            id = 18,
+            category = QuizCategory.QURAN,
+            difficulty = Difficulty.HARD,
+            question = "Welke surah heeft geen Basmallah aan het begin?",
+            answers = listOf("Al-Fātiḥah", "Al-Baqarah", "At-Tawbah", "Al-Ikhlāṣ"),
+            correctAnswerIndex = 2,
+            explanation = "Surah At-Tawbah is de enige surah zonder Basmallah aan het begin.",
+            hint = "Het is een van de laatste surahs die geopenbaard werd.",
+            extraHint = "De naam betekent 'Berouw'.",
+            sourceCategory = "Qur'an"
+        ),
+
+        Question(
+            id = 19,
+            category = QuizCategory.QURAN,
+            difficulty = Difficulty.HARD,
+            question = "Welke surah bevat twee keer de Basmallah?",
+            answers = listOf("Al-Fātiḥah", "An-Naml", "Al-Baqarah", "Al-Kahf"),
+            correctAnswerIndex = 1,
+            explanation = "Surah An-Naml bevat de Basmallah tweemaal: aan het begin en in vers 30.",
+            hint = "De naam betekent 'De Mieren'.",
+            extraHint = "De tweede Basmallah staat in de brief van Sulaymān عليه السلام.",
+            sourceCategory = "Qur'an 27:30"
+        ),
+
+        Question(
+            id = 20,
+            category = QuizCategory.QURAN,
+            difficulty = Difficulty.HARD,
+            question = "Hoeveel sajdahs (prostratietekens) staan er in de Qur'an?",
+            answers = listOf("10", "14", "15", "12"),
+            correctAnswerIndex = 2,
+            explanation = "Er zijn 15 sajdah-plaatsen in de Qur'an waar een prostratieteken staat.",
+            hint = "Het zijn verzen waarbij men sujud kan doen.",
+            extraHint = "De meeste geleerden tellen er 15.",
+            sourceCategory = "Qur'an"
+        ),
+
+        Question(
+            id = 21,
+            category = QuizCategory.PRAYER_WUDU,
+            difficulty = Difficulty.EASY,
+            question = "Hoeveel keer per dag bidt een moslim?",
+            answers = listOf("3", "4", "5", "7"),
+            correctAnswerIndex = 2,
+            explanation = "Een moslim bidt vijf keer per dag: Fajr, Dhuhr, ʿAṣr, Maghrib en ʿIshā'.",
+            hint = "Het is een van de vijf zuilen van de islam.",
+            extraHint = "De gebedstijden zijn verbonden aan de stand van de zon.",
+            sourceCategory = "Fiqh/ʿIbādah"
+        ),
+
+        Question(
+            id = 22,
+            category = QuizCategory.PRAYER_WUDU,
+            difficulty = Difficulty.EASY,
+            question = "Wat is de eerste stap van de wuḍū'?",
+            answers = listOf("Wassen van het gezicht", "Niyyah (intentie)", "Wassen van de handen", "Wassen van de voeten"),
+            correctAnswerIndex = 1,
+            explanation = "De intentie (niyyah) is de eerste stap van de wuḍū', hoewel het wassen van de handen ook tot de handelingen behoort.",
+            hint = "Het begint in het hart.",
+            extraHint = "Zonder intentie is de wuḍū' niet geldig.",
+            sourceCategory = "Fiqh"
+        ),
+
+        Question(
+            id = 23,
+            category = QuizCategory.PRAYER_WUDU,
+            difficulty = Difficulty.EASY,
+            question = "Wat is de oproep tot gebed in de islam?",
+            answers = listOf("Iqāmah", "Adhān", "Dhikr", "Tasbīḥ"),
+            correctAnswerIndex = 1,
+            explanation = "De adhān is de islamitische oproep tot gebed.",
+            hint = "Je hoort dit uitroepen van de minaret.",
+            extraHint = "De eerste adhān werd uitgesproken door Bilāl ibn Rabāḥ رضي الله عنه.",
+            sourceCategory = "Fiqh/Seerah"
+        ),
+
+        Question(
+            id = 24,
+            category = QuizCategory.PRAYER_WUDU,
+            difficulty = Difficulty.EASY,
+            question = "Hoe heet het vrijdaggebed?",
+            answers = listOf("ʿĪd-gebed", "Jumuʿah-gebed", "Tarāwīḥ-gebed", "Tahajjud-gebed"),
+            correctAnswerIndex = 1,
+            explanation = "Het vrijdaggebed heet het Jumuʿah-gebed.",
+            hint = "Vrijdag heet in het Arabisch Yawm al-Jumuʿah.",
+            extraHint = "Het vervangt het Dhuhr-gebed op vrijdag.",
+            sourceCategory = "Fiqh"
+        ),
+
+        Question(
+            id = 25,
+            category = QuizCategory.PRAYER_WUDU,
+            difficulty = Difficulty.EASY,
+            question = "Wat is de richting waarin moslims bidden?",
+            answers = listOf("Jeruzalem", "Makkah", "Madinah", "Cairo"),
+            correctAnswerIndex = 1,
+            explanation = "Moslims bidden in de richting van de Kaʿbah in Makkah, de qiblah.",
+            hint = "Hier staat de Kaʿbah.",
+            extraHint = "De richting heet 'qiblah'.",
+            sourceCategory = "Fiqh"
+        ),
+
+        Question(
+            id = 26,
+            category = QuizCategory.PRAYER_WUDU,
+            difficulty = Difficulty.MEDIUM,
+            question = "Hoeveel rakaʿāt heeft het Fajr-gebed?",
+            answers = listOf("2", "3", "4", "5"),
+            correctAnswerIndex = 0,
+            explanation = "Het Fajr-gebed bestaat uit 2 verplichte rakaʿāt (farḍ).",
+            hint = "Het is het kortste verplichte gebed.",
+            extraHint = "De sunnah voor Fajr telt ook 2 rakaʿāt.",
+            sourceCategory = "Fiqh"
+        ),
+
+        Question(
+            id = 27,
+            category = QuizCategory.PRAYER_WUDU,
+            difficulty = Difficulty.MEDIUM,
+            question = "Welke van de volgende dingen verbreekt de wuḍū'?",
+            answers = listOf("Lachen", "Naar het toilet gaan", "Eten", "Slapen zittend rechtop"),
+            correctAnswerIndex = 1,
+            explanation = "Naar het toilet gaan verbreekt de wuḍū'. Over sommige andere punten zijn er meningsverschillen.",
+            hint = "Denk aan iets dat vuil of onrein is.",
+            extraHint = "Dit is een van de duidelijkste gevallen.",
+            sourceCategory = "Fiqh"
+        ),
+
+        Question(
+            id = 28,
+            category = QuizCategory.PRAYER_WUDU,
+            difficulty = Difficulty.MEDIUM,
+            question = "Wat is tayammum?",
+            answers = listOf("Een speciaal nachtgebed", "Wuḍū' met zand/aarde bij afwezigheid van water", "Een vorm van dhikr", "De gebedsniche in de moskee"),
+            correctAnswerIndex = 1,
+            explanation = "Tayammum is het reinigen met schone aarde of zand als vervanging voor wuḍū' of ghusl wanneer water niet beschikbaar of schadelijk is.",
+            hint = "Het is een verlichte regeling voor bijzondere omstandigheden.",
+            extraHint = "Het is toegestaan bij ziekte, reizen of gebrek aan water.",
+            sourceCategory = "Fiqh"
+        ),
+
+        Question(
+            id = 29,
+            category = QuizCategory.PRAYER_WUDU,
+            difficulty = Difficulty.MEDIUM,
+            question = "Hoe heet het nachtgebed dat vrijwillig is?",
+            answers = listOf("Dhuhr", "Tahajjud", "ʿAṣr", "Witr"),
+            correctAnswerIndex = 1,
+            explanation = "Tahajjud is een vrijwillig nachtgebed dat na het slapen wordt verricht.",
+            hint = "De Profeet ﷺ verrichtte dit gebed regelmatig.",
+            extraHint = "Het is bijzonder gewaardeerd in de nacht.",
+            sourceCategory = "Fiqh/Sunnah"
+        ),
+
+        Question(
+            id = 30,
+            category = QuizCategory.PRAYER_WUDU,
+            difficulty = Difficulty.HARD,
+            question = "Hoeveel rakaʿāt heeft het ʿIshā'-gebed?",
+            answers = listOf("2 farḍ", "3 farḍ", "4 farḍ", "5 farḍ"),
+            correctAnswerIndex = 2,
+            explanation = "Het ʿIshā'-gebed heeft 4 verplichte rakaʿāt.",
+            hint = "Het is een van de langere verplichte gebeden.",
+            extraHint = "Er worden ook sunnah-rakaʿāt bij verricht.",
+            sourceCategory = "Fiqh"
+        ),
+
+        Question(
+            id = 31,
+            category = QuizCategory.PROPHETS,
+            difficulty = Difficulty.EASY,
+            question = "Wie is de laatste profeet in de islam?",
+            answers = listOf("ʿĪsā عليه السلام", "Mūsā عليه السلام", "Muḥammad ﷺ", "Ibrāhīm عليه السلام"),
+            correctAnswerIndex = 2,
+            explanation = "Muḥammad ﷺ is de laatste en afsluiter van de profeten.",
+            hint = "Hij werd gezonden naar de gehele mensheid.",
+            extraHint = "Hij wordt Khātam al-Anbiyā' genoemd.",
+            sourceCategory = "Aqeedah"
+        ),
+
+        Question(
+            id = 32,
+            category = QuizCategory.PROPHETS,
+            difficulty = Difficulty.EASY,
+            question = "Wie is de vader van de profeten?",
+            answers = listOf("Nūḥ عليه السلام", "Ibrāhīm عليه السلام", "Ādam عليه السلام", "Yūsuf عليه السلام"),
+            correctAnswerIndex = 1,
+            explanation = "Ibrāhīm عليه السلام wordt 'Khalīl Allāh' (vriend van Allah) en de vader van de profeten genoemd.",
+            hint = "Hij bouwde de Kaʿbah samen met zijn zoon.",
+            extraHint = "Zijn zoon Ismāʿīl عليه السلام is de voorvader van de Arabieren.",
+            sourceCategory = "Qur'an/Seerah"
+        ),
+
+        Question(
+            id = 33,
+            category = QuizCategory.PROPHETS,
+            difficulty = Difficulty.EASY,
+            question = "Welke profeet bouwde de ark?",
+            answers = listOf("Ibrāhīm عليه السلام", "Nūḥ عليه السلام", "Mūsā عليه السلام", "Dāwūd عليه السلام"),
+            correctAnswerIndex = 1,
+            explanation = "Nūḥ عليه السلام bouwde de ark op bevel van Allah om zichzelf en de gelovigen te redden van de vloed.",
+            hint = "Hij bouwde een enorm houten schip.",
+            extraHint = "Hij predikte 950 jaar.",
+            sourceCategory = "Qur'an"
+        ),
+
+        Question(
+            id = 34,
+            category = QuizCategory.PROPHETS,
+            difficulty = Difficulty.EASY,
+            question = "Welke profeet werd in het vuur gegooid maar bleef ongedeerd?",
+            answers = listOf("Mūsā عليه السلام", "Yūsuf عليه السلام", "Ibrāhīm عليه السلام", "Dāwūd عليه السلام"),
+            correctAnswerIndex = 2,
+            explanation = "Ibrāhīm عليه السلام werd in het vuur gegooid door Nimrod, maar Allah maakte het vuur koel en veilig voor hem.",
+            hint = "Allah bevool het vuur koel te zijn.",
+            extraHint = "Dit staat vermeld in Surah Al-Anbiyā'.",
+            sourceCategory = "Qur'an 21:69"
+        ),
+
+        Question(
+            id = 35,
+            category = QuizCategory.PROPHETS,
+            difficulty = Difficulty.EASY,
+            question = "Welke profeet werd in de buik van een vis geplaatst?",
+            answers = listOf("Nūḥ عليه السلام", "Yūnus عليه السلام", "Ayyūb عليه السلام", "Ilyās عليه السلام"),
+            correctAnswerIndex = 1,
+            explanation = "Yūnus عليه السلام werd in de buik van een grote vis geplaatst nadat hij zijn volk verliet.",
+            hint = "Hij bad in het donker.",
+            extraHint = "Hij wordt ook Dhū al-Nūn (de man van de vis) genoemd.",
+            sourceCategory = "Qur'an"
+        ),
+
+        Question(
+            id = 36,
+            category = QuizCategory.PROPHETS,
+            difficulty = Difficulty.MEDIUM,
+            question = "Welke profeet werd bekend om zijn geduld bij ziekte?",
+            answers = listOf("Yūnus عليه السلام", "Ayyūb عليه السلام", "Ibrāhīm عليه السلام", "Yaʿqūb عليه السلام"),
+            correctAnswerIndex = 1,
+            explanation = "Ayyūb عليه السلام staat bekend om zijn geduld (ṣabr) gedurende zijn zware beproevingen.",
+            hint = "Hij leed lang aan een ziekte.",
+            extraHint = "Allah herstelde hem en gaf hem meer dan voorheen.",
+            sourceCategory = "Qur'an"
+        ),
+
+        Question(
+            id = 37,
+            category = QuizCategory.PROPHETS,
+            difficulty = Difficulty.MEDIUM,
+            question = "Welke profeet is de vader van Ibrāhīm عليه السلام?",
+            answers = listOf("Āzar", "Nūḥ عليه السلام", "Sālih عليه السلام", "Lūṭ عليه السلام"),
+            correctAnswerIndex = 0,
+            explanation = "Āzar was de vader (of oom, volgens sommige geleerden) van Ibrāhīm عليه السلام.",
+            hint = "Hij maakte en aanbad afgodsbeelden.",
+            extraHint = "Ibrāhīm confronteerde zijn vader over de afgoderij.",
+            sourceCategory = "Qur'an"
+        ),
+
+        Question(
+            id = 38,
+            category = QuizCategory.PROPHETS,
+            difficulty = Difficulty.MEDIUM,
+            question = "Welke profeet had de gave om dieren en mensen te begrijpen?",
+            answers = listOf("Dāwūd عليه السلام", "Sulaymān عليه السلام", "Yūsuf عليه السلام", "Mūsā عليه السلام"),
+            correctAnswerIndex = 1,
+            explanation = "Sulaymān عليه السلام had de gave om de taal van dieren en mensen te begrijpen.",
+            hint = "Hij had ook macht over de wind en de djinn.",
+            extraHint = "Het verhaal van de mieren staat in Surah An-Naml.",
+            sourceCategory = "Qur'an"
+        ),
+
+        Question(
+            id = 39,
+            category = QuizCategory.PROPHETS,
+            difficulty = Difficulty.HARD,
+            question = "Welke profeet had de bijnaam 'Dhū al-Qarnayn' niet, maar wordt soms verward?",
+            answers = listOf("Ibrāhīm عليه السلام", "Sulaymān عليه السلام", "Idrīs عليه السلام", "Mūsā عليه السلام"),
+            correctAnswerIndex = 2,
+            explanation = "Idrīs عليه السلام wordt soms verward met andere figuren. Dhū al-Qarnayn is een aparte figuur in de Qur'an.",
+            hint = "Idrīs wordt in de Qur'an vermeld als iemand die een hoge rang bereikt.",
+            extraHint = "Allah verhief hem naar een hoge plek.",
+            sourceCategory = "Qur'an"
+        ),
+
+        Question(
+            id = 40,
+            category = QuizCategory.PROPHETS,
+            difficulty = Difficulty.HARD,
+            question = "Welke profeet sprak als baby in de wieg?",
+            answers = listOf("Yaḥyā عليه السلام", "ʿĪsā عليه السلام", "Mūsā عليه السلام", "Ibrāhīm عليه السلام"),
+            correctAnswerIndex = 1,
+            explanation = "ʿĪsā عليه السلام sprak als baby in de wieg om zijn moeder Maryam te verdedigen.",
+            hint = "Dit is een van de wonderen van deze profeet.",
+            extraHint = "Dit staat in Surah Maryam en Surah Āl ʿImrān.",
+            sourceCategory = "Qur'an"
+        ),
+
+        Question(
+            id = 41,
+            category = QuizCategory.SEERAH,
+            difficulty = Difficulty.EASY,
+            question = "In welke stad werd de Profeet Muḥammad ﷺ geboren?",
+            answers = listOf("Madinah", "Jeruzalem", "Makkah", "Tā'if"),
+            correctAnswerIndex = 2,
+            explanation = "De Profeet Muḥammad ﷺ werd geboren in Makkah.",
+            hint = "Het is de heiligste stad in de islam.",
+            extraHint = "Hier staat de Kaʿbah.",
+            sourceCategory = "Seerah"
+        ),
+
+        Question(
+            id = 42,
+            category = QuizCategory.SEERAH,
+            difficulty = Difficulty.EASY,
+            question = "Naar welke stad migreerde de Profeet ﷺ bij de Hijrah?",
+            answers = listOf("Jeruzalem", "Tā'if", "Madinah", "Makkah"),
+            correctAnswerIndex = 2,
+            explanation = "De Profeet ﷺ migreerde naar Madinah, toen bekend als Yathrib.",
+            hint = "Dit werd het beginpunt van de islamitische kalender.",
+            extraHint = "De stad werd daarna 'Stad van de Profeet' (Madīnat al-Nabī) genoemd.",
+            sourceCategory = "Seerah"
+        ),
+
+        Question(
+            id = 43,
+            category = QuizCategory.SEERAH,
+            difficulty = Difficulty.EASY,
+            question = "Hoe oud was de Profeet ﷺ toen hij de eerste openbaring ontving?",
+            answers = listOf("25 jaar", "35 jaar", "40 jaar", "45 jaar"),
+            correctAnswerIndex = 2,
+            explanation = "De Profeet ﷺ was 40 jaar oud toen hij de eerste openbaring ontving in de grot van Hirā'.",
+            hint = "Het was een volwassen leeftijd.",
+            extraHint = "De eerste geopenbaarde woorden waren 'Iqra' (Lees!).",
+            sourceCategory = "Seerah"
+        ),
+
+        Question(
+            id = 44,
+            category = QuizCategory.SEERAH,
+            difficulty = Difficulty.EASY,
+            question = "Wie was de eerste vrouw die de islam omarmde?",
+            answers = listOf("Fāṭimah رضي الله عنها", "ʿĀ'ishah رضي الله عنها", "Khadījah رضي الله عنها", "Zaynab رضي الله عنها"),
+            correctAnswerIndex = 2,
+            explanation = "Khadījah رضي الله عنها was de eerste persoon die de islam omarmde.",
+            hint = "Zij was de eerste echtgenote van de Profeet ﷺ.",
+            extraHint = "Zij was een rijke en gerespecteerde zakenvrouw.",
+            sourceCategory = "Seerah"
+        ),
+
+        Question(
+            id = 45,
+            category = QuizCategory.SEERAH,
+            difficulty = Difficulty.EASY,
+            question = "In welk jaar vond de Isrā' wal-Miʿrāj plaats?",
+            answers = listOf("Vóór de Hijrah, circa jaar 10 van het profeetschap", "Na de Hijrah, jaar 2", "Na de Hijrah, jaar 5", "Vóór de Hijrah, jaar 1"),
+            correctAnswerIndex = 0,
+            explanation = "De Isrā' wal-Miʿrāj vond plaats circa het 10e jaar van het profeetschap, vóór de Hijrah.",
+            hint = "Het was een moeilijke periode voor de Profeet ﷺ.",
+            extraHint = "De vijf gebeden werden tijdens deze nachtreis verplicht.",
+            sourceCategory = "Seerah"
+        ),
+
+        Question(
+            id = 46,
+            category = QuizCategory.SEERAH,
+            difficulty = Difficulty.MEDIUM,
+            question = "Hoe heet de stam van de Profeet ﷺ?",
+            answers = listOf("Al-Aws", "Quraysh", "Al-Khazraj", "Banū Hāshim"),
+            correctAnswerIndex = 1,
+            explanation = "De Profeet ﷺ behoorde tot de stam Quraysh, en meer specifiek tot de clan Banū Hāshim.",
+            hint = "Dit is een bekende Arabische stam.",
+            extraHint = "Zijn clan Banū Hāshim behoorde tot de Quraysh.",
+            sourceCategory = "Seerah"
+        ),
+
+        Question(
+            id = 47,
+            category = QuizCategory.SEERAH,
+            difficulty = Difficulty.MEDIUM,
+            question = "Wie was de oom van de Profeet ﷺ die hem beschermde maar niet moslim werd?",
+            answers = listOf("Ḥamzah رضي الله عنه", "Abū Ṭālib", "ʿAbbās رضي الله عنه", "Abū Lahab"),
+            correctAnswerIndex = 1,
+            explanation = "Abū Ṭālib beschermde de Profeet ﷺ zijn hele leven maar stierf zonder de shahādah uit te spreken.",
+            hint = "Hij was de vader van ʿAlī رضي الله عنه.",
+            extraHint = "Zijn dood was een groot verdriet voor de Profeet ﷺ.",
+            sourceCategory = "Seerah"
+        ),
+
+        Question(
+            id = 48,
+            category = QuizCategory.SEERAH,
+            difficulty = Difficulty.MEDIUM,
+            question = "Hoe heet de eerste slag in de islamitische geschiedenis?",
+            answers = listOf("Slag van Uḥud", "Slag van Badr", "Slag van Khandaq", "Slag van Ḥunayn"),
+            correctAnswerIndex = 1,
+            explanation = "De Slag van Badr was de eerste grote slag in de islamitische geschiedenis, in het jaar 2 na de Hijrah.",
+            hint = "Het was een overwinning voor de moslims.",
+            extraHint = "De moslims waren sterk in de minderheid.",
+            sourceCategory = "Seerah"
+        ),
+
+        Question(
+            id = 49,
+            category = QuizCategory.SEERAH,
+            difficulty = Difficulty.HARD,
+            question = "Hoeveel jaar duurde de profetische missie van de Profeet ﷺ?",
+            answers = listOf("10 jaar", "15 jaar", "23 jaar", "30 jaar"),
+            correctAnswerIndex = 2,
+            explanation = "De profetische missie duurde 23 jaar: 13 jaar in Makkah en 10 jaar in Madinah.",
+            hint = "Het begon op zijn 40e en eindigde op zijn 63e.",
+            extraHint = "13 jaar Makkah + 10 jaar Madinah.",
+            sourceCategory = "Seerah"
+        ),
+
+        Question(
+            id = 50,
+            category = QuizCategory.SEERAH,
+            difficulty = Difficulty.HARD,
+            question = "Hoe heet de verdrag dat de Profeet ﷺ sloot bij Ḥudaybiyyah?",
+            answers = listOf("Verdrag van Aqabah", "Verdrag van Ḥudaybiyyah", "Verdrag van Madinah", "Verdrag van Tā'if"),
+            correctAnswerIndex = 1,
+            explanation = "Het Verdrag van Ḥudaybiyyah was een tijdelijk vredesakkoord tussen de moslims en Quraysh.",
+            hint = "Het leek aanvankelijk een verlies maar was een grote overwinning.",
+            extraHint = "Allah noemde het een 'duidelijke overwinning' in de Qur'an.",
+            sourceCategory = "Seerah/Qur'an 48:1"
+        ),
+
+        Question(
+            id = 51,
+            category = QuizCategory.SAHABA,
+            difficulty = Difficulty.EASY,
+            question = "Wie was de eerste kalief na de Profeet ﷺ?",
+            answers = listOf("ʿUmar ibn al-Khaṭṭāb رضي الله عنه", "Abū Bakr al-Ṣiddīq رضي الله عنه", "ʿUthmān ibn ʿAffān رضي الله عنه", "ʿAlī ibn Abī Ṭālib رضي الله عنه"),
+            correctAnswerIndex = 1,
+            explanation = "Abū Bakr al-Ṣiddīq رضي الله عنه was de eerste kalief na het overlijden van de Profeet ﷺ.",
+            hint = "Hij was de beste vriend van de Profeet ﷺ.",
+            extraHint = "Hij wordt al-Ṣiddīq (de oprechte) genoemd.",
+            sourceCategory = "Seerah/Sahaba"
+        ),
+
+        Question(
+            id = 52,
+            category = QuizCategory.SAHABA,
+            difficulty = Difficulty.EASY,
+            question = "Wie wordt 'Sayf Allah' (Zwaard van Allah) genoemd?",
+            answers = listOf("Khālid ibn al-Walīd رضي الله عنه", "ʿAlī ibn Abī Ṭālib رضي الله عنه", "ʿUmar رضي الله عنه", "Muʿādh ibn Jabal رضي الله عنه"),
+            correctAnswerIndex = 0,
+            explanation = "Khālid ibn al-Walīd رضي الله عنه werd door de Profeet ﷺ 'Sayf Allāh' (Zwaard van Allah) genoemd.",
+            hint = "Hij was een groot militaire strateeg.",
+            extraHint = "Hij verloor nooit een slag.",
+            sourceCategory = "Sahaba"
+        ),
+
+        Question(
+            id = 53,
+            category = QuizCategory.SAHABA,
+            difficulty = Difficulty.EASY,
+            question = "Wie was de muezzin van de Profeet ﷺ?",
+            answers = listOf("Salmān al-Fārisī رضي الله عنه", "Bilāl ibn Rabāḥ رضي الله عنه", "Abū Hurayrah رضي الله عنه", "ʿAbdullāh ibn Masʿūd رضي الله عنه"),
+            correctAnswerIndex = 1,
+            explanation = "Bilāl ibn Rabāḥ رضي الله عنه was de eerste en meest bekende muezzin van de Profeet ﷺ.",
+            hint = "Hij was een bevrijde slaaf.",
+            extraHint = "Hij stond bekend om zijn krachtige stem.",
+            sourceCategory = "Sahaba/Seerah"
+        ),
+
+        Question(
+            id = 54,
+            category = QuizCategory.SAHABA,
+            difficulty = Difficulty.MEDIUM,
+            question = "Wie wordt beschouwd als de grootste overdrager van ḥadīths?",
+            answers = listOf("ʿĀ'ishah رضي الله عنها", "Abū Bakr رضي الله عنه", "Abū Hurayrah رضي الله عنه", "ʿAbdullāh ibn ʿUmar رضي الله عنه"),
+            correctAnswerIndex = 2,
+            explanation = "Abū Hurayrah رضي الله عنه is de grootste overdrager van ḥadīths met meer dan 5.000 overleveringen.",
+            hint = "Hij staat bekend om zijn sterke geheugen.",
+            extraHint = "Hij kwam pas laat tot de islam maar was daarna altijd bij de Profeet ﷺ.",
+            sourceCategory = "Hadith/Sahaba"
+        ),
+
+        Question(
+            id = 55,
+            category = QuizCategory.SAHABA,
+            difficulty = Difficulty.MEDIUM,
+            question = "Welke sahābi verzamelde de Qur'an in één mushaf?",
+            answers = listOf("Abū Bakr رضي الله عنه (initiatiefnemer)", "ʿUmar رضي الله عنه", "ʿUthmān رضي الله عنه (standaardisatie)", "Zayd ibn Thābit رضي الله عنه (schrijver)"),
+            correctAnswerIndex = 3,
+            explanation = "Zayd ibn Thābit رضي الله عنه was de hoofdschrijver die de Qur'an bij elkaar verzamelde onder leiding van Abū Bakr رضي الله عنه.",
+            hint = "Hij was de persoonlijke schrijver van de Profeet ﷺ.",
+            extraHint = "Later standaardiseerde ʿUthmān رضي الله عنه de mushaf.",
+            sourceCategory = "Sahaba/Seerah"
+        ),
+
+        Question(
+            id = 56,
+            category = QuizCategory.SAHABA,
+            difficulty = Difficulty.HARD,
+            question = "Wie is de sahābi die bekend staat als 'Amīn al-Ummah' (vertrouwensman van de gemeenschap)?",
+            answers = listOf("Abū Bakr رضي الله عنه", "Abū ʿUbaydah ibn al-Jarrāḥ رضي الله عنه", "Ṭalḥah رضي الله عنه", "Al-Zubayr رضي الله عنه"),
+            correctAnswerIndex = 1,
+            explanation = "Abū ʿUbaydah ibn al-Jarrāḥ رضي الله عنه werd door de Profeet ﷺ 'Amīn al-Ummah' (vertrouwensman van deze gemeenschap) genoemd.",
+            hint = "Hij is een van de tien die beloofd zijn met het paradijs.",
+            extraHint = "Hij is niet de bekendste van de vier kaliefen.",
+            sourceCategory = "Sahaba"
+        ),
+
+        Question(
+            id = 57,
+            category = QuizCategory.SAHABA,
+            difficulty = Difficulty.HARD,
+            question = "Wie schreef de Qur'an-verzen op voor de Profeet ﷺ?",
+            answers = listOf("Alleen Zayd ibn Thābit", "Meerdere schrijvers, waaronder Zayd, Muʿāwiyah en anderen", "Alleen ʿAlī رضي الله عنه", "Alleen Abū Bakr رضي الله عنه"),
+            correctAnswerIndex = 1,
+            explanation = "Er waren meerdere schrijvers van de openbaring (kuttāb al-waḥy), waaronder Zayd ibn Thābit, Muʿāwiyah ibn Abī Sufyān, Ubayy ibn Kaʿb en anderen.",
+            hint = "Er waren meerdere sahābah die voor de Profeet ﷺ schreven.",
+            extraHint = "Zayd ibn Thābit was de meest prominente.",
+            sourceCategory = "Seerah/Sahaba"
+        ),
+
+        Question(
+            id = 58,
+            category = QuizCategory.SAHABA,
+            difficulty = Difficulty.HARD,
+            question = "Wie zijn de 'Tien die beloofden met het paradijs' (Al-ʿAsharah al-Mubashsharūn)?",
+            answers = listOf("Alleen de vier kaliefen", "De vier kaliefen plus zes anderen", "De tien beste generaals", "De tien eerste moslims"),
+            correctAnswerIndex = 1,
+            explanation = "De tien met paradijsbelofte zijn de vier kaliefen plus: Ṭalḥah, Al-Zubayr, ʿAbd al-Raḥmān ibn ʿAwf, Saʿd ibn Abī Waqqāṣ, Saʿīd ibn Zayd en Abū ʿUbaydah.",
+            hint = "Ze worden samen vermeld in een bekende ḥadīth.",
+            extraHint = "De vier kaliefen zijn er ook bij inbegrepen.",
+            sourceCategory = "Sahaba/Hadith"
+        ),
+
+        Question(
+            id = 59,
+            category = QuizCategory.RAMADAN,
+            difficulty = Difficulty.EASY,
+            question = "In welke maand vasten moslims?",
+            answers = listOf("Shawwāl", "Rajab", "Ramadan", "Dhul-Hijjah"),
+            correctAnswerIndex = 2,
+            explanation = "Moslims vasten in de heilige maand Ramadan.",
+            hint = "Het is de negende maand van de islamitische kalender.",
+            extraHint = "In deze maand werd de Qur'an geopenbaard.",
+            sourceCategory = "Fiqh/Qur'an"
+        ),
+
+        Question(
+            id = 60,
+            category = QuizCategory.RAMADAN,
+            difficulty = Difficulty.EASY,
+            question = "Wat is de naam van de maaltijd vóór de dageraad in Ramadan?",
+            answers = listOf("Iftār", "Saḥūr", "Tarāwīḥ", "Qiyām"),
+            correctAnswerIndex = 1,
+            explanation = "De Saḥūr is de maaltijd vóór de dageraad (Fajr) waarmee het vasten begint.",
+            hint = "Het is aanbevolen te doen.",
+            extraHint = "De Profeet ﷺ raadde aan dit niet te vergeten.",
+            sourceCategory = "Fiqh/Ramadan"
+        ),
+
+        Question(
+            id = 61,
+            category = QuizCategory.RAMADAN,
+            difficulty = Difficulty.EASY,
+            question = "Wat is de naam van het verbreken van het vasten?",
+            answers = listOf("Saḥūr", "Tarāwīḥ", "Iftār", "Witr"),
+            correctAnswerIndex = 2,
+            explanation = "Het verbreken van het vasten bij zonsondergang heet iftār.",
+            hint = "Je doet het als de zon ondergaat.",
+            extraHint = "Het wordt aanbevolen met dadels te beginnen.",
+            sourceCategory = "Fiqh/Ramadan"
+        ),
+
+        Question(
+            id = 62,
+            category = QuizCategory.RAMADAN,
+            difficulty = Difficulty.EASY,
+            question = "Welke nacht in Ramadan is beter dan duizend maanden?",
+            answers = listOf("De eerste nacht", "De vijftiende nacht", "Laylat al-Qadr", "De laatste vrijdagnacht"),
+            correctAnswerIndex = 2,
+            explanation = "Laylat al-Qadr is beter dan duizend maanden, zoals de Qur'an vermeldt.",
+            hint = "Het wordt in de laatste tien nachten gezocht.",
+            extraHint = "Surah Al-Qadr beschrijft deze nacht.",
+            sourceCategory = "Qur'an 97"
+        ),
+
+        Question(
+            id = 63,
+            category = QuizCategory.RAMADAN,
+            difficulty = Difficulty.EASY,
+            question = "Hoe heet de speciale extra gebeden in Ramadan?",
+            answers = listOf("Tahajjud", "Witr", "Tarāwīḥ", "Qiyām al-Layl"),
+            correctAnswerIndex = 2,
+            explanation = "De Tarāwīḥ-gebeden zijn de bijzondere nachtgebeden die in Ramadan worden verricht.",
+            hint = "Ze worden na het ʿIshā'-gebed verricht.",
+            extraHint = "Ze worden collectief in de moskee verricht.",
+            sourceCategory = "Fiqh/Ramadan"
+        ),
+
+        Question(
+            id = 64,
+            category = QuizCategory.RAMADAN,
+            difficulty = Difficulty.MEDIUM,
+            question = "Wat is Iʿtikāf?",
+            answers = listOf("Een bijzonder gebed op vrijdag", "Terugtrekken in de moskee voor aanbidding", "Een vorm van vasten", "De zakāt van Ramadan"),
+            correctAnswerIndex = 1,
+            explanation = "Iʿtikāf is het terugtrekken in de moskee voor aanbidding, met name in de laatste tien nachten van Ramadan.",
+            hint = "Het wordt aanbevolen in de laatste tien nachten.",
+            extraHint = "De Profeet ﷺ deed dit elke Ramadan.",
+            sourceCategory = "Fiqh/Ramadan"
+        ),
+
+        Question(
+            id = 65,
+            category = QuizCategory.RAMADAN,
+            difficulty = Difficulty.MEDIUM,
+            question = "Wat is zakāt al-fiṭr?",
+            answers = listOf("De zakāt die altijd verplicht is", "Een speciale liefdadigheid aan het einde van Ramadan", "Een feestmaaltijd", "Een extra gebed"),
+            correctAnswerIndex = 1,
+            explanation = "Zakāt al-fiṭr is de verplichte liefdadigheid die aan het einde van Ramadan, vóór het ʿĪd-gebed, gegeven moet worden.",
+            hint = "Het wordt vóór het ʿĪd al-Fiṭr-gebed gegeven.",
+            extraHint = "Het zuivert het vasten van tekortkomingen.",
+            sourceCategory = "Fiqh/Ramadan"
+        ),
+
+        Question(
+            id = 66,
+            category = QuizCategory.RAMADAN,
+            difficulty = Difficulty.HARD,
+            question = "In welke van de laatste tien nachten zoeken moslims Laylat al-Qadr?",
+            answers = listOf("Alleen de 27e nacht", "De oneven nachten", "Alle tien nachten gelijk", "Alleen de eerste vijf"),
+            correctAnswerIndex = 1,
+            explanation = "Moslims zoeken Laylat al-Qadr in de oneven nachten van de laatste tien nachten van Ramadan (21, 23, 25, 27, 29).",
+            hint = "De Profeet ﷺ raadde aan in oneven nachten te zoeken.",
+            extraHint = "De 27e nacht is bijzonder populair maar niet zeker.",
+            sourceCategory = "Hadith/Ramadan"
+        ),
+
+        Question(
+            id = 67,
+            category = QuizCategory.HADITH,
+            difficulty = Difficulty.EASY,
+            question = "Welke beroemde hadithverzameling heeft de bijnaam 'Al-Ṣaḥīḥayn' (de twee authentieke)?",
+            answers = listOf("Abū Dāwūd en Tirmidhī", "Ṣaḥīḥ al-Bukhārī en Ṣaḥīḥ Muslim", "Ibn Mājah en Nasā'ī", "Mālik en Aḥmad"),
+            correctAnswerIndex = 1,
+            explanation = "Al-Ṣaḥīḥayn verwijst naar Ṣaḥīḥ al-Bukhārī en Ṣaḥīḥ Muslim, de twee meest gezaghebbende hadithverzamelingen.",
+            hint = "Ze worden samen als de meest betrouwbare beschouwd.",
+            extraHint = "De auteurs zijn al-Bukhārī en Muslim.",
+            sourceCategory = "Hadith"
+        ),
+
+        Question(
+            id = 68,
+            category = QuizCategory.HADITH,
+            difficulty = Difficulty.EASY,
+            question = "Wat is de bekende hadith die zegt dat acties beoordeeld worden op basis van intenties?",
+            answers = listOf("Hadith Jibrīl", "Hadith al-Niyyah", "Hadith al-Arbaʿīn", "Hadith Muʿādh"),
+            correctAnswerIndex = 1,
+            explanation = "De hadith 'Innamā al-aʿmāl bil-niyyāt' (Acties worden beoordeeld op basis van intenties) staat bekend als Hadith al-Niyyah.",
+            hint = "Het begint met 'Innamā al-aʿmāl...'.",
+            extraHint = "Het is de eerste hadith in Ṣaḥīḥ al-Bukhārī.",
+            sourceCategory = "Hadith"
+        ),
+
+        Question(
+            id = 69,
+            category = QuizCategory.HADITH,
+            difficulty = Difficulty.MEDIUM,
+            question = "Hoeveel ḥadīths staan er in het bekende werk 'Al-Arbaʿīn al-Nawawiyyah'?",
+            answers = listOf("40 of 42", "50", "30", "100"),
+            correctAnswerIndex = 0,
+            explanation = "Al-Arbaʿīn al-Nawawiyyah bevat 40 (of 42) kernhadīths die Imām al-Nawawī verzamelde.",
+            hint = "Al-Arbaʿīn betekent 'de veertig'.",
+            extraHint = "Imām al-Nawawī schreef dit werk.",
+            sourceCategory = "Hadith"
+        ),
+
+        Question(
+            id = 70,
+            category = QuizCategory.HADITH,
+            difficulty = Difficulty.MEDIUM,
+            question = "Wat zijn de Kutub al-Sittah?",
+            answers = listOf("De zes gezaghebbende hadithverzamelingen", "De zes zuilen van het geloof", "De zes boeken van fiqh", "De zes meest bekende surahs"),
+            correctAnswerIndex = 0,
+            explanation = "Kutub al-Sittah zijn de zes gezaghebbende hadithverzamelingen: Bukhārī, Muslim, Abū Dāwūd, Tirmidhī, Nasā'ī en Ibn Mājah.",
+            hint = "Sittah betekent zes.",
+            extraHint = "Bukhārī en Muslim zijn de meest gezaghebbende van de zes.",
+            sourceCategory = "Hadith"
+        ),
+
+        Question(
+            id = 71,
+            category = QuizCategory.HADITH,
+            difficulty = Difficulty.HARD,
+            question = "Wat is een ḥadīth qudsī?",
+            answers = listOf("Een ḥadīth met een zwakke keten", "Een ḥadīth waarbij Allah spreekt via de Profeet ﷺ maar het geen Qur'an is", "Een ḥadīth over de Kaʿbah", "Een ḥadīth uit Ṣaḥīḥ al-Bukhārī"),
+            correctAnswerIndex = 1,
+            explanation = "Een ḥadīth qudsī is een overlevering waarbij de Profeet ﷺ de woorden van Allah overbrengt, maar het is geen deel van de Qur'an.",
+            hint = "De inhoud is van Allah, de woorden zijn van de Profeet ﷺ.",
+            extraHint = "Het is anders dan de Qur'an qua openbaring.",
+            sourceCategory = "Hadith/Ulum al-Hadith"
+        ),
+
+        Question(
+            id = 72,
+            category = QuizCategory.HADITH,
+            difficulty = Difficulty.HARD,
+            question = "Wat is de isnad van een ḥadīth?",
+            answers = listOf("De tekst van de ḥadīth", "De keten van overleveraars", "De verklaring van de ḥadīth", "De categorie van de ḥadīth"),
+            correctAnswerIndex = 1,
+            explanation = "De isnad is de keten van overleveraars die een ḥadīth terugvoert tot de Profeet ﷺ.",
+            hint = "Het is de schakelketen van mensen.",
+            extraHint = "De tekst zelf heet matn.",
+            sourceCategory = "Hadith/Ulum al-Hadith"
+        ),
+
+        Question(
+            id = 73,
+            category = QuizCategory.GENERAL,
+            difficulty = Difficulty.EASY,
+            question = "Wat zijn de vijf zuilen van de islam?",
+            answers = listOf("Shahādah, ṣalāh, zakāh, ṣawm, ḥajj", "Shahādah, zakāh, ṣawm, ḥajj, jiḥād", "Ṣalāh, ṣawm, ḥajj, zakāh, dhikr", "Shahādah, ṣalāh, ḥajj, ṣawm, ṣadaqah"),
+            correctAnswerIndex = 0,
+            explanation = "De vijf zuilen van de islam zijn: shahādah (getuigenis), ṣalāh (gebed), zakāh (armenbelasting), ṣawm (vasten) en ḥajj (pelgrimstocht).",
+            hint = "Denk aan de fundament van het islamitisch geloof en handelen.",
+            extraHint = "Ze worden vermeld in de bekende ḥadīth over de zuilen.",
+            sourceCategory = "Aqeedah/Fiqh"
+        ),
+
+        Question(
+            id = 74,
+            category = QuizCategory.GENERAL,
+            difficulty = Difficulty.EASY,
+            question = "Wat zijn de zes zuilen van het geloof (īmān)?",
+            answers = listOf("Allah, engelen, boeken, profeten, Dag des Oordeels, Goddelijke Beschikking", "Allah, Qur'an, gebeden, vasten, ḥajj, zakāh", "Engelen, djinn, mensen, dieren, planten, stenen", "Qur'an, Sunnah, ijmāʿ, qiyās, istiḥsān, ʿurf"),
+            correctAnswerIndex = 0,
+            explanation = "De zes zuilen van het geloof zijn: geloof in Allah, Zijn engelen, Zijn boeken, Zijn profeten, de Dag des Oordeels en de Goddelijke Beschikking.",
+            hint = "Ze zijn vermeld in de hadith van Jibrīl.",
+            extraHint = "De zesde zuil is al-qadar.",
+            sourceCategory = "Aqeedah"
+        ),
+
+        Question(
+            id = 75,
+            category = QuizCategory.GENERAL,
+            difficulty = Difficulty.EASY,
+            question = "Wat is de kaʿbah?",
+            answers = listOf("De heilige moskee in Madinah", "Een kubusvormig gebouw in Makkah dat de qiblah is", "De tombe van de Profeet ﷺ", "De moskee in Jeruzalem"),
+            correctAnswerIndex = 1,
+            explanation = "De Kaʿbah is een kubusvormig gebouw in Makkah, de Masjid al-Ḥarām, dat de qiblah is voor moslims wereldwijd.",
+            hint = "Het is de richting van het gebed.",
+            extraHint = "Ibrāhīm en Ismāʿīl bouwden het.",
+            sourceCategory = "Fiqh/Seerah"
+        ),
+
+        Question(
+            id = 76,
+            category = QuizCategory.GENERAL,
+            difficulty = Difficulty.EASY,
+            question = "Wat is de shahādah?",
+            answers = listOf("Het islamitische vasten", "Het islamitische geloofsbelijdenis", "Het islamitische gebed", "De pelgrimstocht"),
+            correctAnswerIndex = 1,
+            explanation = "De shahādah is de islamitische geloofsbelijdenis: 'Ik getuig dat er geen god is behalve Allah, en dat Muḥammad Zijn boodschapper is.'",
+            hint = "Het is de eerste zuil van de islam.",
+            extraHint = "Het uitspreken ervan met overtuiging maakt iemand moslim.",
+            sourceCategory = "Aqeedah"
+        ),
+
+        Question(
+            id = 77,
+            category = QuizCategory.GENERAL,
+            difficulty = Difficulty.MEDIUM,
+            question = "Wat is de ḥajj?",
+            answers = listOf("Het islamitische vasten in Ramadan", "De jaarlijkse pelgrimstocht naar Makkah", "De islamitische armenbelasting", "Het vrijdaggebed"),
+            correctAnswerIndex = 1,
+            explanation = "De ḥajj is de jaarlijkse pelgrimstocht naar Makkah, die eenmalig verplicht is voor elke moslim die daartoe in staat is.",
+            hint = "Het vindt plaats in de maand Dhul-Hijjah.",
+            extraHint = "Het is de vijfde zuil van de islam.",
+            sourceCategory = "Fiqh"
+        ),
+
+        Question(
+            id = 78,
+            category = QuizCategory.GENERAL,
+            difficulty = Difficulty.MEDIUM,
+            question = "Wat is zakāh?",
+            answers = listOf("Vrijwillige liefdadigheid", "Verplichte armenbelasting voor gekwalificeerde moslims", "Het islamitische gebed", "Het vasten in Ramadan"),
+            correctAnswerIndex = 1,
+            explanation = "Zakāh is de verplichte armenbelasting die moslims met voldoende bezit betalen, een van de vijf zuilen van de islam.",
+            hint = "Het is 2,5% van het bezit boven de niṣāb.",
+            extraHint = "Het is de derde zuil van de islam.",
+            sourceCategory = "Fiqh"
+        ),
+
+        Question(
+            id = 79,
+            category = QuizCategory.GENERAL,
+            difficulty = Difficulty.MEDIUM,
+            question = "Wat is tawḥīd?",
+            answers = listOf("Het islamitische gebed", "De eenheid van Allah", "De ḥajj", "De islamitische wet"),
+            correctAnswerIndex = 1,
+            explanation = "Tawḥīd betekent de eenheid en uniciteit van Allah, het fundament van het islamitische geloof.",
+            hint = "Het is het fundament van het geloof.",
+            extraHint = "Het tegendeel heet shirk.",
+            sourceCategory = "Aqeedah"
+        ),
+
+        Question(
+            id = 80,
+            category = QuizCategory.GENERAL,
+            difficulty = Difficulty.HARD,
+            question = "Wat is shirk?",
+            answers = listOf("Berouw", "Deelgenoten aan Allah toeschrijven", "Het islamitische gebed", "Liefdadigheid"),
+            correctAnswerIndex = 1,
+            explanation = "Shirk betekent deelgenoten of medegoden aan Allah toeschrijven, de grootste zonde in de islam.",
+            hint = "Het is het tegendeel van tawḥīd.",
+            extraHint = "Shirk is de enige zonde die Allah niet vergeeft als iemand ermee sterft.",
+            sourceCategory = "Aqeedah"
+        ),
+
+        Question(
+            id = 81,
+            category = QuizCategory.GENERAL,
+            difficulty = Difficulty.HARD,
+            question = "Wat zijn de bronnen van de islamitische wet (uṣūl al-fiqh)?",
+            answers = listOf("Qur'an en Sunnah alleen", "Qur'an, Sunnah, ijmāʿ en qiyās", "Meningen van alle geleerden samen", "Alleen de vier rechtsscholen"),
+            correctAnswerIndex = 1,
+            explanation = "De vier hoofdbronnen van de islamitische wet zijn: de Qur'an, de Sunnah, ijmāʿ (consensus) en qiyās (analogie).",
+            hint = "De eerste twee zijn de primaire bronnen.",
+            extraHint = "Sommige geleerden voegen extra bronnen toe.",
+            sourceCategory = "Fiqh/Ulum"
+        ),
+
+        Question(
+            id = 82,
+            category = QuizCategory.GENERAL,
+            difficulty = Difficulty.HARD,
+            question = "Wat zijn de vier grote rechtsscholen (madhāhib) in de soennitische islam?",
+            answers = listOf("Ḥanafī, Mālikī, Shāfiʿī, Ḥanbalī", "Ḥanafī, Shīʿī, Sufi, Wahhābī", "Bukhārī, Muslim, Tirmidhī, Nasā'ī", "Ḥanbalī, Zaydī, Ibāḍī, Ismāʿīlī"),
+            correctAnswerIndex = 0,
+            explanation = "De vier soennitische rechtsscholen zijn: Ḥanafī, Mālikī, Shāfiʿī en Ḥanbalī.",
+            hint = "Ze zijn vernoemd naar de vier grote imams.",
+            extraHint = "Alle vier zijn geldig en worden gevolgd door moslims wereldwijd.",
+            sourceCategory = "Fiqh"
+        ),
+
+        Question(
+            id = 83,
+            category = QuizCategory.GENERAL,
+            difficulty = Difficulty.MEDIUM,
+            question = "Wat zijn de Asmāʾ al-Ḥusnā?",
+            answers = listOf("De 99 namen van de Profeet ﷺ", "De 99 mooiste namen van Allah", "De 99 regels van de fiqh", "De 99 ḥadīths van Bukhārī"),
+            correctAnswerIndex = 1,
+            explanation = "De Asmāʾ al-Ḥusnā zijn de 99 mooiste namen van Allah.",
+            hint = "Het zijn namen die Zijn eigenschappen beschrijven.",
+            extraHint = "Allah is Al-Raḥmān, Al-Raḥīm, Al-Malik...",
+            sourceCategory = "Aqeedah"
+        ),
+
+        Question(
+            id = 84,
+            category = QuizCategory.GENERAL,
+            difficulty = Difficulty.EASY,
+            question = "Wat betekent 'SubḥānAllāh'?",
+            answers = listOf("Allah is groot", "Alle lof zij Allah", "Glorie zij Allah/Verheven is Allah", "Er is geen god dan Allah"),
+            correctAnswerIndex = 2,
+            explanation = "SubḥānAllāh betekent 'Verheven is Allah' of 'Glorie zij Allah'.",
+            hint = "Het is een uitdrukking van bewondering en verheffing.",
+            extraHint = "Het is een veelgebruikte dhikr.",
+            sourceCategory = "Aqeedah/Dhikr"
+        ),
+
+        Question(
+            id = 85,
+            category = QuizCategory.GENERAL,
+            difficulty = Difficulty.EASY,
+            question = "Wat betekent 'AlḥamduliLlāh'?",
+            answers = listOf("Alle lof zij Allah", "Er is geen god dan Allah", "Allah is groot", "Verheven is Allah"),
+            correctAnswerIndex = 0,
+            explanation = "AlḥamduliLlāh betekent 'Alle lof zij Allah'.",
+            hint = "Het is een uitdrukking van dankbaarheid.",
+            extraHint = "Al-Fātiḥah begint ermee.",
+            sourceCategory = "Aqeedah/Dhikr"
+        ),
+
+        Question(
+            id = 86,
+            category = QuizCategory.GENERAL,
+            difficulty = Difficulty.EASY,
+            question = "Wat betekent 'Allāhu Akbar'?",
+            answers = listOf("Glorie zij Allah", "Alle lof zij Allah", "Allah is de Grootste", "Er is geen god dan Allah"),
+            correctAnswerIndex = 2,
+            explanation = "Allāhu Akbar betekent 'Allah is de Grootste'.",
+            hint = "Het wordt aan het begin van elk gebed gezegd.",
+            extraHint = "Het is ook de openingswoord van de adhān.",
+            sourceCategory = "Fiqh/Dhikr"
+        ),
+
+        Question(
+            id = 87,
+            category = QuizCategory.GENERAL,
+            difficulty = Difficulty.MEDIUM,
+            question = "Wat is iḥsān?",
+            answers = listOf("Vasten", "Islamitisch recht", "Allah aanbidden alsof je Hem ziet", "Liefdadigheid geven"),
+            correctAnswerIndex = 2,
+            explanation = "Iḥsān is Allah aanbidden alsof je Hem ziet; en als je Hem niet ziet, weet dat Hij jou ziet.",
+            hint = "Dit komt uit de bekende hadith van Jibrīl.",
+            extraHint = "Het gaat om perfectie en bewustzijn in aanbidding.",
+            sourceCategory = "Hadith"
+        ),
+
+        Question(
+            id = 88,
+            category = QuizCategory.GENERAL,
+            difficulty = Difficulty.MEDIUM,
+            question = "Wat betekent taqwā?",
+            answers = listOf("Godsbewustzijn en bescherming tegen zonde", "Rijkdom", "Reizen", "Snel reciteren"),
+            correctAnswerIndex = 0,
+            explanation = "Taqwā betekent bewustzijn van Allah en jezelf beschermen tegen Zijn ontevredenheid door gehoorzaamheid.",
+            hint = "Het wordt vaak vertaald als godsvrees/godsbewustzijn.",
+            extraHint = "Het zit in hart en daden.",
+            sourceCategory = "Akhlaaq/Aqeedah"
+        ),
+
+        Question(
+            id = 89,
+            category = QuizCategory.GENERAL,
+            difficulty = Difficulty.HARD,
+            question = "Wat zijn de drie niveaus die in de bekende hadith van Jibrīl worden genoemd?",
+            answers = listOf("Islam, īmān en iḥsān", "Ṣalāh, zakat en hajj", "Qur'an, hadith en fiqh", "Makkah, Madinah en Quds"),
+            correctAnswerIndex = 0,
+            explanation = "De bekende hadith van Jibrīl noemt islam, īmān en iḥsān als belangrijke niveaus van de religie.",
+            hint = "Deze hadith wordt vaak gezien als samenvatting van de religie.",
+            extraHint = "Denk aan het gesprek waarin Jibrīl vragen stelde aan de Profeet ﷺ.",
+            sourceCategory = "Hadith"
+        ),
+
+        Question(
+            id = 90,
+            category = QuizCategory.AKHLAAQ,
+            difficulty = Difficulty.EASY,
+            question = "Welke eigenschap wordt sterk benadrukt in de islam bij ouders?",
+            answers = listOf("Goedheid en respect", "Alleen financiële hulp", "Discussie winnen", "Afstand houden"),
+            correctAnswerIndex = 0,
+            explanation = "Goedheid, respect en zorg voor ouders worden sterk benadrukt in de islam.",
+            hint = "Birr al-wālidayn is een grote deugd.",
+            extraHint = "De Qur'an noemt goedheid voor ouders vaak naast aanbidding van Allah.",
+            sourceCategory = "Qur'an/Akhlaaq"
+        ),
+
+        Question(
+            id = 91,
+            category = QuizCategory.AKHLAAQ,
+            difficulty = Difficulty.EASY,
+            question = "Wat betekent ṣabr?",
+            answers = listOf("Geduld en standvastigheid", "Liefdadigheid", "Gebedsrichting", "Recitatie"),
+            correctAnswerIndex = 0,
+            explanation = "Ṣabr betekent geduld, volharding en standvastigheid bij gehoorzaamheid, beproeving en het vermijden van zonde.",
+            hint = "Het is een belangrijke islamitische eigenschap.",
+            extraHint = "Allah prijst de geduldigen.",
+            sourceCategory = "Qur'an/Akhlaaq"
+        ),
+
+        Question(
+            id = 92,
+            category = QuizCategory.AKHLAAQ,
+            difficulty = Difficulty.EASY,
+            question = "Wat betekent shukr?",
+            answers = listOf("Dankbaarheid", "Vasten", "Reiniging", "Strijd"),
+            correctAnswerIndex = 0,
+            explanation = "Shukr betekent dankbaarheid tegenover Allah voor Zijn gunsten.",
+            hint = "Dankbaarheid is met hart, tong en daden.",
+            extraHint = "Het tegenovergestelde is ondankbaarheid.",
+            sourceCategory = "Akhlaaq"
+        ),
+
+        Question(
+            id = 93,
+            category = QuizCategory.AKHLAAQ,
+            difficulty = Difficulty.MEDIUM,
+            question = "Welke eigenschap hoort bij een betrouwbare moslim?",
+            answers = listOf("Amānah", "Hasad", "Kibr", "Ghaflah"),
+            correctAnswerIndex = 0,
+            explanation = "Amānah betekent betrouwbaarheid en verantwoordelijkheid.",
+            hint = "De Profeet ﷺ stond bekend als al-Amīn.",
+            extraHint = "Hasad is jaloezie, kibr is hoogmoed.",
+            sourceCategory = "Akhlaaq"
+        ),
+
+        Question(
+            id = 94,
+            category = QuizCategory.AKHLAAQ,
+            difficulty = Difficulty.MEDIUM,
+            question = "Wat betekent ikhlāṣ?",
+            answers = listOf("Oprechtheid voor Allah", "Veel geld geven zodat mensen het zien", "Snel bidden", "Alleen Arabisch spreken"),
+            correctAnswerIndex = 0,
+            explanation = "Ikhlāṣ betekent oprechtheid: daden verrichten omwille van Allah.",
+            hint = "Het is een kernvoorwaarde voor aanvaarding van daden.",
+            extraHint = "Het tegenovergestelde is riya' of schijnvertoon.",
+            sourceCategory = "Akhlaaq/Aqeedah"
+        ),
+
+        Question(
+            id = 95,
+            category = QuizCategory.AKHLAAQ,
+            difficulty = Difficulty.MEDIUM,
+            question = "Wat betekent riya'?",
+            answers = listOf("Schijnvertoon in aanbidding", "Dankbaarheid", "Nederigheid", "Vergeving vragen"),
+            correctAnswerIndex = 0,
+            explanation = "Riya' betekent goede daden doen om door mensen gezien of geprezen te worden.",
+            hint = "Het tast oprechtheid aan.",
+            extraHint = "Het is tegengesteld aan ikhlāṣ.",
+            sourceCategory = "Akhlaaq"
+        ),
+
+        Question(
+            id = 96,
+            category = QuizCategory.AKHLAAQ,
+            difficulty = Difficulty.MEDIUM,
+            question = "Wat betekent tawbah?",
+            answers = listOf("Berouw en terugkeer naar Allah", "Een feestdag", "Een recitatievorm", "Een gebedsoproep"),
+            correctAnswerIndex = 0,
+            explanation = "Tawbah betekent berouw tonen en terugkeren naar Allah.",
+            hint = "Het omvat stoppen met de zonde, spijt en de intentie om niet terug te keren.",
+            extraHint = "Allah houdt van degenen die berouw tonen.",
+            sourceCategory = "Akhlaaq/Fiqh"
+        ),
+
+        Question(
+            id = 97,
+            category = QuizCategory.AKHLAAQ,
+            difficulty = Difficulty.HARD,
+            question = "Welke term verwijst naar hoogmoed?",
+            answers = listOf("Kibr", "Ṣabr", "Shukr", "Ḥilm"),
+            correctAnswerIndex = 0,
+            explanation = "Kibr betekent hoogmoed of arrogantie.",
+            hint = "Het is een gevaarlijke eigenschap voor het hart.",
+            extraHint = "Ḥilm betekent juist verdraagzaamheid/zachtmoedigheid.",
+            sourceCategory = "Akhlaaq"
+        ),
+
+        Question(
+            id = 98,
+            category = QuizCategory.AKHLAAQ,
+            difficulty = Difficulty.HARD,
+            question = "Wat betekent ḥilm?",
+            answers = listOf("Zachtmoedigheid en beheersing", "Arrogantie", "Jaloezie", "Vergeetachtigheid"),
+            correctAnswerIndex = 0,
+            explanation = "Ḥilm betekent zachtmoedigheid, verdraagzaamheid en zelfbeheersing.",
+            hint = "Het is een nobele karaktereigenschap.",
+            extraHint = "Het helpt bij boosheid en conflicten.",
+            sourceCategory = "Akhlaaq"
+        ),
+
+        Question(
+            id = 99,
+            category = QuizCategory.AKHLAAQ,
+            difficulty = Difficulty.HARD,
+            question = "Wat betekent hasad?",
+            answers = listOf("Afgunst/jaloezie op iemands gunst", "Oprechtheid", "Geduld", "Liefdadigheid"),
+            correctAnswerIndex = 0,
+            explanation = "Hasad is afgunst: misgunnen dat iemand een gunst heeft.",
+            hint = "Het is schadelijk voor het hart en de gemeenschap.",
+            extraHint = "Het is niet hetzelfde als gezonde bewondering.",
+            sourceCategory = "Akhlaaq"
+        ),
+
+        Question(
+            id = 100,
+            category = QuizCategory.AKHLAAQ,
+            difficulty = Difficulty.HARD,
+            question = "Wat betekent tawakkul?",
+            answers = listOf("Vertrouwen op Allah met het nemen van middelen", "Niets doen en afwachten", "Alleen plannen maken", "Twijfelen aan Allah"),
+            correctAnswerIndex = 0,
+            explanation = "Tawakkul betekent vertrouwen op Allah terwijl je ook toegestane middelen neemt.",
+            hint = "Het is geen luiheid.",
+            extraHint = "Denk aan: vastbinden van de kameel en vertrouwen op Allah.",
+            sourceCategory = "Aqeedah/Akhlaaq"
+        )
+
+    )
+
+}
