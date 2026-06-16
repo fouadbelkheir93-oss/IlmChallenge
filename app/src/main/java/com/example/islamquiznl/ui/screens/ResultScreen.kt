@@ -41,8 +41,8 @@ fun ResultScreen(vm: QuizViewModel, onPlayAgain: () -> Unit, onHome: () -> Unit)
                 Icon(Icons.Default.EmojiEvents, null, tint = GoldPrimary,
                     modifier = Modifier.size(80.dp))
                 Spacer(Modifier.height(12.dp))
-                Text("Mashaallah! 🎉", color = GoldPrimary, fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold)
+                Text("🌸 Allahoema Barik! 🌸", color = GoldPrimary, fontSize = 28.sp,
+                    fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
                 Text("Je hebt de quiz uitgespeeld!", color = Color.White.copy(alpha = 0.8f),
                     textAlign = TextAlign.Center)
             } else {
