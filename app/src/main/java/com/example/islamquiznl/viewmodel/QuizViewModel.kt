@@ -3,7 +3,6 @@ package com.example.islamquiznl.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.islamquiznl.data.Difficulty
 import com.example.islamquiznl.data.Question
 import com.example.islamquiznl.data.QuizCategory
 import com.example.islamquiznl.repository.QuizRepository
@@ -16,39 +15,51 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-val SCORE_LADDER = listOf(0, 100, 200, 300, 500, 1_000, 2_000, 4_000, 8_000,
-    16_000, 32_000, 64_000, 125_000, 250_000, 500_000, 1_000_000)
+// Index 0 = geen punten nog, index 1 = vraag 1 = 100 punten, ... index 15 = vraag 15 = 1.000.000
+val SCORE_LADDER = listOf(
+    0, 100, 200, 300, 500, 1_000, 2_000, 4_000, 8_000,
+    16_000, 32_000, 64_000, 125_000, 250_000, 500_000, 1_000_000
+)
+
+fun formatScore(score: Int): String = when {
+    score >= 1_000_000 -> "1.000.000"
+    score >= 1_000     -> "${score / 1_000}.${String.format("%03d", score % 1_000)}"
+    else               -> score.toString()
+}
 
 data class QuizState(
-    val questions: List<Question>    = emptyList(),
-    val currentIndex: Int            = 0,
-    val selectedAnswer: Int?         = null,
-    val isAnswered: Boolean          = false,
-    val score: Int                   = 0,
-    val correctCount: Int            = 0,
-    val isGameOver: Boolean          = false,
-    val isWon: Boolean               = false,
-    val showExplanation: Boolean     = false,
-    val fiftyFiftyUsed: Boolean      = false,
-    val hintUsed: Boolean            = false,
-    val imamUsed: Boolean            = false,
-    val skipUsed: Boolean            = false,
-    val hiddenAnswers: Set<Int>      = emptySet(),
-    val showHint: Boolean            = false,
-    val hintText: String             = "",
-    val showImam: Boolean            = false,
-    val imamText: String             = "",
-    val timerSeconds: Int            = 30,
-    val usedIds: Set<Int>            = emptySet()
+    val questions: List<Question>   = emptyList(),
+    val currentIndex: Int           = 0,      // 0-based: vraag 1 = index 0
+    val selectedAnswer: Int?        = null,
+    val isAnswered: Boolean         = false,
+    val score: Int                  = 0,
+    val correctCount: Int           = 0,
+    val isGameOver: Boolean         = false,
+    val isWon: Boolean              = false,
+    val showExplanation: Boolean    = false,
+    val fiftyFiftyUsed: Boolean     = false,
+    val hintUsed: Boolean           = false,
+    val imamUsed: Boolean           = false,
+    val skipUsed: Boolean           = false,
+    val hiddenAnswers: Set<Int>     = emptySet(),
+    val showHint: Boolean           = false,
+    val hintText: String            = "",
+    val showImam: Boolean           = false,
+    val imamText: String            = "",
+    val timerSeconds: Int           = 60,
+    val usedIds: Set<Int>           = emptySet()
 ) {
     val currentQuestion: Question? get() = questions.getOrNull(currentIndex)
+    // vraag 1 = questionNumber 1, bij index 0
     val questionNumber: Int        get() = currentIndex + 1
+    // punten die de speler verdient als hij de HUIDIGE vraag goed beantwoordt
+    val currentLevelPoints: Int    get() = SCORE_LADDER.getOrElse(currentIndex + 1) { 1_000_000 }
 }
 
 class QuizViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repo  = QuizRepository()
-    val prefs         = AppPreferences(application)
+    private val repo = QuizRepository()
+    val prefs        = AppPreferences(application)
 
     private val _state = MutableStateFlow(QuizState())
     val state: StateFlow<QuizState> = _state.asStateFlow()
@@ -66,7 +77,7 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
         timerJob?.cancel()
         val questions = repo.buildRound(category)
         val usedIds   = questions.map { it.id }.toSet()
-        _state.value  = QuizState(questions = questions, usedIds = usedIds)
+        _state.value  = QuizState(questions = questions, usedIds = usedIds, timerSeconds = 60)
         maybeStartTimer()
     }
 
@@ -76,11 +87,12 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
         val q = s.currentQuestion ?: return
         timerJob?.cancel()
 
-        val correct     = index == q.correctAnswerIndex
-        val newCorrect  = if (correct) s.correctCount + 1 else s.correctCount
-        val newScore    = if (correct) SCORE_LADDER.getOrElse(s.currentIndex + 1) { s.score } else s.score
-        val gameOver    = !correct
-        val won         = correct && s.currentIndex == 14
+        val correct    = index == q.correctAnswerIndex
+        val newCorrect = if (correct) s.correctCount + 1 else s.correctCount
+        // Score = punten van de huidige vraag als goed
+        val newScore   = if (correct) SCORE_LADDER.getOrElse(s.currentIndex + 1) { s.score } else s.score
+        val gameOver   = !correct
+        val won        = correct && s.currentIndex == 14
 
         _state.value = s.copy(
             selectedAnswer  = index,
@@ -109,7 +121,7 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
             hiddenAnswers   = emptySet(),
             showHint        = false,
             showImam        = false,
-            timerSeconds    = 30
+            timerSeconds    = 60
         )
         maybeStartTimer()
     }
@@ -153,7 +165,7 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
             showHint        = false,
             showImam        = false,
             usedIds         = s.usedIds + replacement.id,
-            timerSeconds    = 30
+            timerSeconds    = 60
         )
         maybeStartTimer()
     }
@@ -163,6 +175,7 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun maybeStartTimer() {
         viewModelScope.launch {
+            // Standaard aan (timerEnabled default = false in prefs, maar we zetten het nu aan)
             if (prefs.timerEnabled.first()) startTimer()
         }
     }
@@ -170,7 +183,7 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
     private fun startTimer() {
         timerJob?.cancel()
         timerJob = viewModelScope.launch {
-            var seconds = 30
+            var seconds = 60
             while (seconds > 0) {
                 delay(1_000)
                 seconds--
@@ -184,11 +197,11 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun resetBestScore()            { viewModelScope.launch { prefs.resetBestScore() } }
-    fun setTimerEnabled(on: Boolean){ viewModelScope.launch { prefs.setTimerEnabled(on) } }
-    fun setDarkMode(on: Boolean)    { viewModelScope.launch { prefs.setDarkMode(on) } }
+    fun resetBestScore()             { viewModelScope.launch { prefs.resetBestScore() } }
+    fun setTimerEnabled(on: Boolean) { viewModelScope.launch { prefs.setTimerEnabled(on) } }
+    fun setDarkMode(on: Boolean)     { viewModelScope.launch { prefs.setDarkMode(on) } }
 
-    // Daily
+    // ── Daily ──────────────────────────────────────────────────────────────────
     private val _dailyQuestion = MutableStateFlow<Question?>(null)
     val dailyQuestion: StateFlow<Question?> = _dailyQuestion.asStateFlow()
     private val _dailyAnswered = MutableStateFlow(false)
