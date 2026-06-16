@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,18 +23,49 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.example.islamquiznl.ui.*
+import com.example.islamquiznl.utils.TimerSoundPlayer
 import com.example.islamquiznl.viewmodel.SCORE_LADDER
 import com.example.islamquiznl.viewmodel.QuizViewModel
+import com.example.islamquiznl.viewmodel.formatScore
 
 @Composable
 fun QuizScreen(vm: QuizViewModel, onGameEnd: () -> Unit, onBack: () -> Unit) {
-    val state by vm.state.collectAsState()
+    val state        by vm.state.collectAsState()
     val timerEnabled by vm.prefs.timerEnabled.collectAsState(initial = false)
+    var showLadder   by remember { mutableStateOf(false) }
+
+    // ── Timer geluid ───────────────────────────────────────────────────────────
+    val timerSoundPlayer = remember { TimerSoundPlayer() }
+
+    DisposableEffect(Unit) {
+        onDispose { timerSoundPlayer.release() }
+    }
+
+    // Reset geluid bij nieuwe vraag
+    LaunchedEffect(state.currentIndex) {
+        timerSoundPlayer.reset()
+    }
+
+    // Speel tik af bij laatste 10 seconden
+    LaunchedEffect(state.timerSeconds, state.isAnswered, state.currentIndex, timerEnabled) {
+        if (!state.isAnswered && timerEnabled) {
+            when {
+                state.timerSeconds in 1..10 ->
+                    timerSoundPlayer.playTick(
+                        remainingSeconds = state.timerSeconds,
+                        soundEnabled     = true
+                    )
+                state.timerSeconds == 0 ->
+                    timerSoundPlayer.playTimeUp(soundEnabled = true)
+            }
+        }
+    }
 
     LaunchedEffect(state.isGameOver, state.isWon) {
         if (state.isGameOver || state.isWon) {
-            kotlinx.coroutines.delay(1500)
+            kotlinx.coroutines.delay(2000)
             onGameEnd()
         }
     }
@@ -51,28 +83,39 @@ fun QuizScreen(vm: QuizViewModel, onGameEnd: () -> Unit, onBack: () -> Unit) {
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {
-            // Top bar
+            // ── Top bar ────────────────────────────────────────────────────────
             Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = onBack) {
                     Icon(Icons.Default.ArrowBack, null, tint = GoldPrimary)
                 }
                 Spacer(Modifier.weight(1f))
                 Text(
-                    "Vraag ${state.questionNumber} van 15",
+                    "Vraag ${state.questionNumber} / 15",
                     color = Color.White.copy(alpha = 0.8f),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Spacer(Modifier.weight(1f))
-                Text(
-                    "${state.score} pt",
-                    color = GoldPrimary,
-                    fontWeight = FontWeight.Bold
-                )
+                // Score + Scoreladder knop
+                Column(horizontalAlignment = Alignment.End) {
+                    Text(
+                        "${formatScore(state.score)} pt",
+                        color = GoldPrimary,
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Text(
+                        "→ ${formatScore(state.currentLevelPoints)} pt",
+                        color = GoldPrimary.copy(alpha = 0.6f),
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
+                Spacer(Modifier.width(8.dp))
+                IconButton(onClick = { showLadder = true }) {
+                    Icon(Icons.Default.Star, null, tint = GoldPrimary, modifier = Modifier.size(22.dp))
+                }
             }
 
-            Spacer(Modifier.height(4.dp))
-
-            // Progress bar
+            // ── Progress bar ───────────────────────────────────────────────────
             LinearProgressIndicator(
                 progress = { state.questionNumber / 15f },
                 modifier = Modifier.fillMaxWidth().height(4.dp).clip(RoundedCornerShape(2.dp)),
@@ -82,23 +125,31 @@ fun QuizScreen(vm: QuizViewModel, onGameEnd: () -> Unit, onBack: () -> Unit) {
 
             Spacer(Modifier.height(8.dp))
 
-            // Timer
-            if (timerEnabled) {
+            // ── Timer ──────────────────────────────────────────────────────────
+            if (timerEnabled && !state.isAnswered) {
                 val timerColor = when {
-                    state.timerSeconds <= 5 -> Color.Red
-                    state.timerSeconds <= 10 -> Color(0xFFFFA500)
+                    state.timerSeconds <= 10 -> Color.Red
+                    state.timerSeconds <= 20 -> Color(0xFFFFA500)
                     else -> GoldPrimary
                 }
-                Text(
-                    "⏱ ${state.timerSeconds}s",
-                    color = timerColor,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("⏱", fontSize = 14.sp)
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        "${state.timerSeconds}s",
+                        color = timerColor,
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
                 Spacer(Modifier.height(4.dp))
             }
 
-            // Difficulty badge
+            // ── Difficulty + Category badges ───────────────────────────────────
             val diffColor = when (q.difficulty.name) {
                 "EASY"   -> GreenIslamic
                 "MEDIUM" -> Color(0xFFF59E0B)
@@ -109,11 +160,11 @@ fun QuizScreen(vm: QuizViewModel, onGameEnd: () -> Unit, onBack: () -> Unit) {
                 "MEDIUM" -> "Gemiddeld"
                 else     -> "Moeilijk"
             }
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = diffColor.copy(alpha = 0.25f)
-                ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Surface(shape = RoundedCornerShape(12.dp), color = diffColor.copy(alpha = 0.22f)) {
                     Text(
                         diffLabel,
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 3.dp),
@@ -121,10 +172,7 @@ fun QuizScreen(vm: QuizViewModel, onGameEnd: () -> Unit, onBack: () -> Unit) {
                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
                     )
                 }
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = GoldPrimary.copy(alpha = 0.15f)
-                ) {
+                Surface(shape = RoundedCornerShape(12.dp), color = GoldPrimary.copy(alpha = 0.13f)) {
                     Text(
                         q.sourceCategory,
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 3.dp),
@@ -136,12 +184,11 @@ fun QuizScreen(vm: QuizViewModel, onGameEnd: () -> Unit, onBack: () -> Unit) {
 
             Spacer(Modifier.height(16.dp))
 
-            // Question card
+            // ── Question card ──────────────────────────────────────────────────
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape    = RoundedCornerShape(20.dp),
-                colors   = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.08f)),
-                elevation = CardDefaults.cardElevation(0.dp)
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.08f))
             ) {
                 Text(
                     q.question,
@@ -156,25 +203,25 @@ fun QuizScreen(vm: QuizViewModel, onGameEnd: () -> Unit, onBack: () -> Unit) {
 
             Spacer(Modifier.height(16.dp))
 
-            // Answer options
+            // ── Answer options ─────────────────────────────────────────────────
             q.answers.forEachIndexed { idx, answer ->
                 if (idx in state.hiddenAnswers) return@forEachIndexed
 
                 val bgColor by animateColorAsState(
                     targetValue = when {
-                        !state.isAnswered            -> Color.White.copy(alpha = 0.08f)
-                        idx == q.correctAnswerIndex  -> SuccessGreen.copy(alpha = 0.85f)
-                        idx == state.selectedAnswer  -> ErrorRed.copy(alpha = 0.85f)
-                        else                         -> Color.White.copy(alpha = 0.04f)
+                        !state.isAnswered                -> Color.White.copy(alpha = 0.08f)
+                        idx == q.correctAnswerIndex      -> SuccessGreen.copy(alpha = 0.85f)
+                        idx == state.selectedAnswer      -> ErrorRed.copy(alpha = 0.85f)
+                        else                             -> Color.White.copy(alpha = 0.04f)
                     },
                     animationSpec = tween(400), label = "bg"
                 )
                 val borderColor by animateColorAsState(
                     targetValue = when {
-                        !state.isAnswered            -> GoldPrimary.copy(alpha = 0.3f)
-                        idx == q.correctAnswerIndex  -> SuccessGreen
-                        idx == state.selectedAnswer  -> ErrorRed
-                        else                         -> Color.Transparent
+                        !state.isAnswered                -> GoldPrimary.copy(alpha = 0.3f)
+                        idx == q.correctAnswerIndex      -> SuccessGreen
+                        idx == state.selectedAnswer      -> ErrorRed
+                        else                             -> Color.Transparent
                     },
                     animationSpec = tween(400), label = "border"
                 )
@@ -210,169 +257,318 @@ fun QuizScreen(vm: QuizViewModel, onGameEnd: () -> Unit, onBack: () -> Unit) {
                 }
             }
 
-            // Hint banners
+            // ── Hint banner ────────────────────────────────────────────────────
             if (state.showHint) {
                 Spacer(Modifier.height(12.dp))
-                InfoBanner("💡 Hint", state.hintText, GoldPrimary) { vm.dismissHint() }
-            }
-            if (state.showImam) {
-                Spacer(Modifier.height(8.dp))
-                InfoBanner("🕌 Vraag de imam", state.imamText, GreenIslamic) { vm.dismissImam() }
+                HintBanner(
+                    title    = "💡 Hint",
+                    text     = state.hintText,
+                    color    = GoldPrimary,
+                    onClose  = { vm.dismissHint() }
+                )
             }
 
-            // Explanation
+            // ── Imam banner ────────────────────────────────────────────────────
+            if (state.showImam) {
+                Spacer(Modifier.height(8.dp))
+                HintBanner(
+                    title    = "🕌 Vraag de imam",
+                    text     = state.imamText,
+                    color    = GreenIslamic,
+                    onClose  = { vm.dismissImam() }
+                )
+            }
+
+            // ── Explanation after answer ───────────────────────────────────────
             if (state.showExplanation) {
                 Spacer(Modifier.height(16.dp))
+
+                val isCorrect = state.selectedAnswer == q.correctAnswerIndex
+                val cardColor = if (isCorrect) SuccessGreen.copy(alpha = 0.2f)
+                                else ErrorRed.copy(alpha = 0.15f)
+
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = if (state.selectedAnswer == q.correctAnswerIndex || state.isWon)
-                            SuccessGreen.copy(alpha = 0.2f) else ErrorRed.copy(alpha = 0.15f)
-                    )
+                    colors = CardDefaults.cardColors(containerColor = cardColor)
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
+                        // Uitkomst label
                         Text(
-                            if (state.selectedAnswer == q.correctAnswerIndex || state.isWon) "✅ Goed!" else "❌ Helaas!",
-                            color = Color.White, fontWeight = FontWeight.Bold
+                            if (isCorrect) "✅ Juist!" else "❌ Fout!",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.bodyLarge
                         )
-                        Spacer(Modifier.height(6.dp))
-                        Text(q.explanation, color = Color.White.copy(alpha = 0.9f),
-                            style = MaterialTheme.typography.bodySmall)
+
+                        // Toon correct antwoord bij fout
+                        if (!isCorrect) {
+                            Spacer(Modifier.height(6.dp))
+                            Text(
+                                "Het juiste antwoord: ${q.answers[q.correctAnswerIndex]}",
+                                color = SuccessGreen,
+                                fontWeight = FontWeight.SemiBold,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+
+                        Spacer(Modifier.height(8.dp))
+                        Divider(color = Color.White.copy(alpha = 0.15f))
+                        Spacer(Modifier.height(8.dp))
+
+                        // Uitleg — niet afgekapt
+                        Text(
+                            q.explanation,
+                            color = Color.White.copy(alpha = 0.92f),
+                            style = MaterialTheme.typography.bodySmall.copy(lineHeight = 20.sp)
+                        )
                     }
                 }
 
+                // Volgende vraag knop (alleen als nog niet game over / won)
                 if (!state.isGameOver && !state.isWon) {
                     Spacer(Modifier.height(16.dp))
                     Button(
                         onClick = { vm.nextQuestion() },
                         modifier = Modifier.fillMaxWidth().height(50.dp),
                         shape = RoundedCornerShape(25.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = GoldPrimary, contentColor = NavyDeep)
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = GoldPrimary,
+                            contentColor   = NavyDeep
+                        )
                     ) {
-                        Text("Volgende vraag →", fontWeight = FontWeight.Bold)
+                        Text("Volgende vraag →", fontWeight = FontWeight.Bold, fontSize = 16.sp)
                     }
                 }
             }
 
             Spacer(Modifier.height(16.dp))
 
-            // Lifelines
+            // ── Lifelines ──────────────────────────────────────────────────────
             if (!state.isAnswered) {
-                LifelineRow(state, vm)
+                LifelineRow(state = state, vm = vm)
             }
 
-            Spacer(Modifier.height(16.dp))
-
-            // Score ladder (compact)
-            ScoreLadder(currentIndex = state.currentIndex)
+            Spacer(Modifier.height(24.dp))
         }
+    }
+
+    // ── Scoreladder Dialog ─────────────────────────────────────────────────────
+    if (showLadder) {
+        ScoreLadderDialog(
+            currentIndex = state.currentIndex,
+            onDismiss    = { showLadder = false }
+        )
     }
 }
 
+// ── Hint/Imam banner ───────────────────────────────────────────────────────────
 @Composable
-private fun InfoBanner(title: String, text: String, color: Color, onDismiss: () -> Unit) {
+private fun HintBanner(title: String, text: String, color: Color, onClose: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.cardColors(containerColor = color.copy(alpha = 0.18f))
+        colors = CardDefaults.cardColors(containerColor = color.copy(alpha = 0.16f)),
+        border = CardDefaults.outlinedCardBorder().copy(width = 0.dp)
     ) {
-        Row(modifier = Modifier.padding(14.dp), verticalAlignment = Alignment.Top) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(title, color = color, fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.labelMedium)
-                Text(text, color = Color.White.copy(alpha = 0.9f),
-                    style = MaterialTheme.typography.bodySmall)
+        Column(modifier = Modifier.padding(14.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    title,
+                    color = color,
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.labelLarge
+                )
+                TextButton(
+                    onClick = onClose,
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    Text("✕", color = color.copy(alpha = 0.7f))
+                }
             }
-            TextButton(onClick = onDismiss) { Text("✕", color = color) }
+            Spacer(Modifier.height(6.dp))
+            Text(
+                text,
+                color = Color.White.copy(alpha = 0.92f),
+                style = MaterialTheme.typography.bodySmall.copy(lineHeight = 20.sp)
+            )
         }
     }
 }
 
+// ── Lifeline row ───────────────────────────────────────────────────────────────
 @Composable
-private fun LifelineRow(state: com.example.islamquiznl.viewmodel.QuizState, vm: QuizViewModel) {
+private fun LifelineRow(
+    state: com.example.islamquiznl.viewmodel.QuizState,
+    vm: QuizViewModel
+) {
     Column {
-        Text("Hulplijnen", color = GoldPrimary.copy(alpha = 0.8f),
-            style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
+        Text(
+            "Hulplijnen",
+            color = GoldPrimary.copy(alpha = 0.8f),
+            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)
+        )
         Spacer(Modifier.height(6.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            LifelineButton("50/50", !state.fiftyFiftyUsed) { vm.useFiftyFifty() }
-            LifelineButton("💡 Hint", !state.hintUsed) { vm.useHint() }
-            LifelineButton("🕌 Imam", !state.imamUsed) { vm.useImam() }
-            LifelineButton("⏭ Skip", !state.skipUsed) { vm.useSkip() }
+            LifelineBtn("50/50",     !state.fiftyFiftyUsed) { vm.useFiftyFifty() }
+            LifelineBtn("💡 Hint",   !state.hintUsed)       { vm.useHint() }
+            LifelineBtn("🕌 Imam",   !state.imamUsed)       { vm.useImam() }
+            LifelineBtn("⏭ Skip",   !state.skipUsed)       { vm.useSkip() }
         }
         Spacer(Modifier.height(4.dp))
         Text(
-            "* \"Vraag de imam\" is een extra hint, geen echte imam",
-            color = Color.White.copy(alpha = 0.35f),
+            "* \"Vraag de imam\" is een extra hint",
+            color = Color.White.copy(alpha = 0.3f),
             style = MaterialTheme.typography.labelSmall
         )
     }
 }
 
 @Composable
-private fun RowScope.LifelineButton(label: String, enabled: Boolean, onClick: () -> Unit) {
+private fun RowScope.LifelineBtn(label: String, enabled: Boolean, onClick: () -> Unit) {
     OutlinedButton(
         onClick = onClick,
         enabled = enabled,
         modifier = Modifier.weight(1f).height(38.dp),
         shape = RoundedCornerShape(10.dp),
         contentPadding = PaddingValues(horizontal = 4.dp),
-        colors = ButtonDefaults.outlinedButtonColors(contentColor = if (enabled) GoldPrimary else Color.Gray),
+        colors = ButtonDefaults.outlinedButtonColors(
+            contentColor         = if (enabled) GoldPrimary else Color.Gray,
+            disabledContentColor = Color.Gray.copy(alpha = 0.4f)
+        ),
         border = androidx.compose.foundation.BorderStroke(
-            1.dp, if (enabled) GoldPrimary.copy(alpha = 0.6f) else Color.Gray.copy(alpha = 0.3f)
+            1.dp,
+            if (enabled) GoldPrimary.copy(alpha = 0.6f) else Color.Gray.copy(alpha = 0.2f)
         )
     ) {
         Text(label, fontSize = 10.sp, fontWeight = FontWeight.SemiBold, textAlign = TextAlign.Center)
     }
 }
 
+// ── Scoreladder Dialog (miljoenenquiz stijl) ───────────────────────────────────
 @Composable
-private fun ScoreLadder(currentIndex: Int) {
-    val labels = listOf("100","200","300","500","1K","2K","4K","8K","16K","32K","64K","125K","250K","500K","1M")
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.05f))
-    ) {
-        Column(modifier = Modifier.padding(12.dp)) {
-            Text("Scoreladder", color = GoldPrimary, fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.labelMedium)
-            Spacer(Modifier.height(8.dp))
-            labels.forEachIndexed { idx, pts ->
-                val stepIdx = 14 - idx
-                val isActive  = stepIdx == currentIndex
-                val isPassed  = stepIdx < currentIndex
+private fun ScoreLadderDialog(currentIndex: Int, onDismiss: () -> Unit) {
+    // Ladder: vraag 15 bovenaan, vraag 1 onderaan — zoals echte miljoenenquiz
+    val steps = listOf(
+        15 to 1_000_000,
+        14 to 500_000,
+        13 to 250_000,
+        12 to 125_000,
+        11 to 64_000,
+        10 to 32_000,
+        9  to 16_000,
+        8  to 8_000,
+        7  to 4_000,
+        6  to 2_000,
+        5  to 1_000,
+        4  to 500,
+        3  to 300,
+        2  to 200,
+        1  to 100
+    )
+
+    Dialog(onDismissRequest = onDismiss) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            shape = RoundedCornerShape(24.dp),
+            colors = CardDefaults.cardColors(containerColor = NavyMid)
+        ) {
+            Column(modifier = Modifier.padding(20.dp)) {
+                // Header
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 1.dp)
-                        .clip(RoundedCornerShape(6.dp))
-                        .background(
-                            when {
-                                isActive -> GoldPrimary.copy(alpha = 0.25f)
-                                isPassed -> GreenIslamic.copy(alpha = 0.15f)
-                                else     -> Color.Transparent
-                            }
-                        )
-                        .padding(horizontal = 8.dp, vertical = 2.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        "Vraag ${15 - idx}",
-                        color = if (isActive) GoldPrimary else Color.White.copy(alpha = 0.5f),
-                        style = MaterialTheme.typography.labelSmall
+                        "☪ Scoreladder",
+                        color = GoldPrimary,
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.titleMedium
                     )
-                    Text(
-                        "$pts punten",
-                        color = when {
-                            isActive -> GoldPrimary
-                            isPassed -> GreenIslamic
-                            else     -> Color.White.copy(alpha = 0.4f)
-                        },
-                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = if (isActive) FontWeight.Bold else FontWeight.Normal)
-                    )
+                    TextButton(onClick = onDismiss) {
+                        Text("✕", color = GoldPrimary.copy(alpha = 0.7f))
+                    }
                 }
+
+                Spacer(Modifier.height(12.dp))
+
+                steps.forEach { (questionNum, points) ->
+                    val stepIndex = questionNum - 1   // 0-based
+                    val isCurrent = stepIndex == currentIndex
+                    val isPassed  = stepIndex < currentIndex
+
+                    // Kleur per status
+                    val rowBg = when {
+                        isCurrent -> GoldPrimary.copy(alpha = 0.22f)
+                        isPassed  -> GreenIslamic.copy(alpha = 0.13f)
+                        else      -> Color.Transparent
+                    }
+                    val labelColor = when {
+                        isCurrent -> GoldPrimary
+                        isPassed  -> GreenIslamic
+                        else      -> Color.White.copy(alpha = 0.35f)
+                    }
+                    val pointsColor = when {
+                        isCurrent -> GoldPrimary
+                        isPassed  -> GreenIslamic.copy(alpha = 0.9f)
+                        else      -> Color.White.copy(alpha = 0.3f)
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 2.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(rowBg)
+                            .padding(horizontal = 10.dp, vertical = 5.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            // Icoon per status
+                            Text(
+                                when {
+                                    isCurrent -> "▶"
+                                    isPassed  -> "✓"
+                                    else      -> "  "
+                                },
+                                color = labelColor,
+                                fontSize = 11.sp,
+                                modifier = Modifier.width(16.dp)
+                            )
+                            Spacer(Modifier.width(4.dp))
+                            Text(
+                                "Vraag $questionNum",
+                                color = labelColor,
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    fontWeight = if (isCurrent) FontWeight.Bold else FontWeight.Normal
+                                )
+                            )
+                        }
+                        Text(
+                            "${formatScore(points)} punten",
+                            color = pointsColor,
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                fontWeight = if (isCurrent) FontWeight.Bold else FontWeight.Normal
+                            )
+                        )
+                    }
+                }
+
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    "Geen echt geld — alleen punten",
+                    color = Color.White.copy(alpha = 0.25f),
+                    style = MaterialTheme.typography.labelSmall,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
             }
         }
     }
