@@ -19,7 +19,6 @@ import com.example.islamquiznl.viewmodel.ChallengeViewModel
 @Composable
 fun ChallengeResultScreen(
     vm: ChallengeViewModel,
-    onPlayAgainSameCode: () -> Unit,
     onNewCode: () -> Unit,
     onHome: () -> Unit
 ) {
@@ -98,22 +97,12 @@ fun ChallengeResultScreen(
 
             // Knoppen
             Button(
-                onClick = onPlayAgainSameCode,
+                onClick = onNewCode,
                 modifier = Modifier.fillMaxWidth().height(50.dp),
                 shape = RoundedCornerShape(25.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = GoldPrimary, contentColor = NavyDeep)
             ) {
-                Text("Opnieuw met dezelfde code", fontWeight = FontWeight.Bold)
-            }
-
-            OutlinedButton(
-                onClick = onNewCode,
-                modifier = Modifier.fillMaxWidth().height(50.dp),
-                shape = RoundedCornerShape(25.dp),
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
-                border = androidx.compose.foundation.BorderStroke(1.dp, GoldPrimary.copy(alpha = 0.5f))
-            ) {
-                Text("Nieuwe code", fontWeight = FontWeight.SemiBold)
+                Text("Daag opnieuw een vriend uit", fontWeight = FontWeight.Bold)
             }
 
             OutlinedButton(

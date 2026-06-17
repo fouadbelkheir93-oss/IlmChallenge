@@ -94,6 +94,30 @@ fun ChallengeQuizScreen(
 
             Spacer(Modifier.height(12.dp))
 
+            // Timer (altijd aan in challenge)
+            val timerColor = when {
+                state.timerSeconds <= 5  -> Color.Red
+                state.timerSeconds <= 10 -> Color(0xFFFFA500)
+                else -> GoldPrimary
+            }
+            if (!state.isAnswered) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("⏱", fontSize = 14.sp)
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        "${state.timerSeconds}s",
+                        color = timerColor,
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+                Spacer(Modifier.height(8.dp))
+            }
+
             // Badges
             val diffColor = when (q.difficulty.name) {
                 "EASY"   -> GreenIslamic
