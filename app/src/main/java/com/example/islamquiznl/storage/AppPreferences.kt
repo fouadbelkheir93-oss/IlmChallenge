@@ -23,7 +23,7 @@ class AppPreferences(private val context: Context) {
 
     val bestScore: Flow<Int>    = context.dataStore.data.map { it[BEST_SCORE]    ?: 0 }
     val bestCorrect: Flow<Int>  = context.dataStore.data.map { it[BEST_CORRECT]  ?: 0 }
-    val timerEnabled: Flow<Boolean> = context.dataStore.data.map { it[TIMER_ENABLED] ?: false }
+    val timerEnabled: Flow<Boolean> = context.dataStore.data.map { it[TIMER_ENABLED] ?: true }
     val darkMode: Flow<Boolean>     = context.dataStore.data.map { it[DARK_MODE]     ?: true  }
 
     suspend fun saveBestScore(score: Int, correct: Int) {
