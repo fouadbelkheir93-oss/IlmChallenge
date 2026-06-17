@@ -11,96 +11,66 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.islamquiznl.data.QuizCategory
-import com.example.islamquiznl.ui.screens.AboutScreen
-import com.example.islamquiznl.ui.screens.CategoryScreen
-import com.example.islamquiznl.ui.screens.DailyQuestionScreen
-import com.example.islamquiznl.ui.screens.HomeScreen
-import com.example.islamquiznl.ui.screens.QuizScreen
-import com.example.islamquiznl.ui.screens.ResultScreen
-import com.example.islamquiznl.ui.screens.SettingsScreen
+import com.example.islamquiznl.ui.screens.*
+import com.example.islamquiznl.viewmodel.ChallengeViewModel
 import com.example.islamquiznl.viewmodel.QuizViewModel
 
 @Composable
 fun AppNavigation(vm: QuizViewModel = viewModel()) {
-    val navController = rememberNavController()
-    val state by vm.state.collectAsState()
+    val navController   = rememberNavController()
+    val state           by vm.state.collectAsState()
+    val challengeVm: ChallengeViewModel = viewModel()
 
     NavHost(navController = navController, startDestination = Routes.HOME) {
+
+        // ── Home ───────────────────────────────────────────────────────────────
         composable(Routes.HOME) {
             HomeScreen(
-                onStartQuiz = {
-                    vm.startQuiz()
-                    navController.navigate(Routes.QUIZ)
-                },
-                onCategories = { navController.navigate(Routes.CATEGORIES) },
-                onDailyQuestion = {
-                    vm.loadDailyQuestion()
-                    navController.navigate(Routes.DAILY_QUESTION)
-                },
-                onSettings = { navController.navigate(Routes.SETTINGS) },
-                onAbout = { navController.navigate(Routes.ABOUT) }
+                onStartQuiz     = { vm.startQuiz(); navController.navigate(Routes.QUIZ) },
+                onCategories    = { navController.navigate(Routes.CATEGORIES) },
+                onDailyQuestion = { navController.navigate(Routes.FRIEND_CHALLENGE) },
+                onSettings      = { navController.navigate(Routes.SETTINGS) },
+                onAbout         = { navController.navigate(Routes.ABOUT) }
             )
         }
 
+        // ── Solo quiz ──────────────────────────────────────────────────────────
         composable(Routes.QUIZ) {
             QuizScreen(
-                vm = vm,
-                onGameEnd = {
-                    navController.navigate(Routes.RESULT) {
-                        popUpTo(Routes.QUIZ) { inclusive = true }
-                    }
-                },
-                onBack = { navController.popBackStack() }
+                vm        = vm,
+                onGameEnd = { navController.navigate(Routes.RESULT) { popUpTo(Routes.QUIZ) { inclusive = true } } },
+                onBack    = { navController.popBackStack() }
             )
         }
 
         composable(
-            route = Routes.QUIZ_CATEGORY,
+            route     = Routes.QUIZ_CATEGORY,
             arguments = listOf(navArgument("category") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val categoryName = backStackEntry.arguments?.getString("category")
-            val category = categoryName?.let { runCatching { QuizCategory.valueOf(it) }.getOrNull() }
-
-            LaunchedEffect(categoryName) {
-                vm.startQuiz(category)
-            }
-
-            // Wait for the category round to be created before drawing QuizScreen. This prevents
-            // resetting the quiz on every recomposition and avoids a blank screen during setup.
+        ) { back ->
+            val cat = back.arguments?.getString("category")
+                ?.let { runCatching { QuizCategory.valueOf(it) }.getOrNull() }
+            LaunchedEffect(cat) { vm.startQuiz(cat) }
             if (state.questions.isNotEmpty()) {
                 QuizScreen(
-                    vm = vm,
-                    onGameEnd = {
-                        navController.navigate(Routes.RESULT) {
-                            popUpTo(Routes.QUIZ_CATEGORY) { inclusive = true }
-                        }
-                    },
-                    onBack = { navController.popBackStack() }
+                    vm        = vm,
+                    onGameEnd = { navController.navigate(Routes.RESULT) { popUpTo(Routes.QUIZ_CATEGORY) { inclusive = true } } },
+                    onBack    = { navController.popBackStack() }
                 )
             }
         }
 
         composable(Routes.RESULT) {
             ResultScreen(
-                vm = vm,
-                onPlayAgain = {
-                    vm.startQuiz()
-                    navController.navigate(Routes.QUIZ) {
-                        popUpTo(Routes.HOME)
-                    }
-                },
-                onHome = {
-                    navController.navigate(Routes.HOME) {
-                        popUpTo(Routes.HOME) { inclusive = true }
-                    }
-                }
+                vm          = vm,
+                onPlayAgain = { vm.startQuiz(); navController.navigate(Routes.QUIZ) { popUpTo(Routes.HOME) } },
+                onHome      = { navController.navigate(Routes.HOME) { popUpTo(Routes.HOME) { inclusive = true } } }
             )
         }
 
         composable(Routes.CATEGORIES) {
             CategoryScreen(
-                onCategorySelected = { category -> navController.navigate("quiz/${category.name}") },
-                onBack = { navController.popBackStack() }
+                onCategorySelected = { cat -> navController.navigate("quiz/${cat.name}") },
+                onBack             = { navController.popBackStack() }
             )
         }
 
@@ -114,6 +84,55 @@ fun AppNavigation(vm: QuizViewModel = viewModel()) {
 
         composable(Routes.ABOUT) {
             AboutScreen(onBack = { navController.popBackStack() })
+        }
+
+        // ── Challenge ──────────────────────────────────────────────────────────
+        composable(Routes.FRIEND_CHALLENGE) {
+            FriendChallengeScreen(
+                onStartChallenge = { code ->
+                    navController.navigate("challenge_quiz/$code")
+                },
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(
+            route     = Routes.CHALLENGE_QUIZ,
+            arguments = listOf(navArgument("code") { type = NavType.StringType })
+        ) { back ->
+            val code = back.arguments?.getString("code") ?: ""
+            LaunchedEffect(code) { challengeVm.startChallenge(code) }
+            ChallengeQuizScreen(
+                vm         = challengeVm,
+                onFinished = {
+                    navController.navigate(Routes.CHALLENGE_RESULT) {
+                        popUpTo(Routes.FRIEND_CHALLENGE)
+                    }
+                },
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Routes.CHALLENGE_RESULT) {
+            ChallengeResultScreen(
+                vm                  = challengeVm,
+                onPlayAgainSameCode = {
+                    val code = challengeVm.state.value.code
+                    navController.navigate("challenge_quiz/$code") {
+                        popUpTo(Routes.FRIEND_CHALLENGE)
+                    }
+                },
+                onNewCode = {
+                    navController.navigate(Routes.FRIEND_CHALLENGE) {
+                        popUpTo(Routes.FRIEND_CHALLENGE) { inclusive = true }
+                    }
+                },
+                onHome = {
+                    navController.navigate(Routes.HOME) {
+                        popUpTo(Routes.HOME) { inclusive = true }
+                    }
+                }
+            )
         }
     }
 }
