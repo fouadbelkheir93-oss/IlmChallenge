@@ -2,13 +2,17 @@ package com.example.islamquiznl.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.islamquiznl.data.Difficulty
 import com.example.islamquiznl.data.Question
 import com.example.islamquiznl.data.QuestionBankNl
 import com.example.islamquiznl.utils.ChallengeCodeUtils
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 data class ChallengeState(
     val code: String              = "",
@@ -20,7 +24,8 @@ data class ChallengeState(
     val isFinished: Boolean       = false,
     val correctCount: Int         = 0,
     val startTimeMs: Long         = 0L,
-    val elapsedMs: Long           = 0L
+    val elapsedMs: Long           = 0L,
+    val timerSeconds: Int         = 30
 ) {
     val currentQuestion: Question? get() = questions.getOrNull(currentIndex)
     val questionNumber: Int        get() = currentIndex + 1
@@ -32,6 +37,8 @@ class ChallengeViewModel(application: Application) : AndroidViewModel(applicatio
     private val _state = MutableStateFlow(ChallengeState())
     val state: StateFlow<ChallengeState> = _state.asStateFlow()
 
+    private var timerJob: Job? = null
+
     private fun seededShuffle(list: List<Question>, rng: java.util.Random): List<Question> {
         val result = list.toMutableList()
         for (i in result.size - 1 downTo 1) {
@@ -42,6 +49,7 @@ class ChallengeViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun startChallenge(code: String) {
+        timerJob?.cancel()
         val normalized = ChallengeCodeUtils.normalize(code)
         val seed       = ChallengeCodeUtils.toSeed(normalized)
         val rng        = java.util.Random(seed)
@@ -73,14 +81,17 @@ class ChallengeViewModel(application: Application) : AndroidViewModel(applicatio
         _state.value = ChallengeState(
             code        = normalized,
             questions   = questions,
-            startTimeMs = System.currentTimeMillis()
+            startTimeMs = System.currentTimeMillis(),
+            timerSeconds = 30
         )
+        startTimer()
     }
 
     fun selectAnswer(index: Int) {
         val s = _state.value
         if (s.isAnswered) return
         val q = s.currentQuestion ?: return
+        timerJob?.cancel()
 
         val correct = index == q.correctAnswerIndex
         val elapsed = System.currentTimeMillis() - s.startTimeMs
@@ -111,12 +122,31 @@ class ChallengeViewModel(application: Application) : AndroidViewModel(applicatio
                 currentIndex   = nextIndex,
                 selectedAnswer = null,
                 isAnswered     = false,
-                isCorrect      = false
+                isCorrect      = false,
+                timerSeconds   = 30
             )
+            startTimer()
         }
     }
 
-    fun resetWithSameCode() {
-        startChallenge(_state.value.code)
+    private fun startTimer() {
+        timerJob?.cancel()
+        timerJob = viewModelScope.launch {
+            var seconds = 30
+            while (seconds > 0) {
+                delay(1_000)
+                seconds--
+                _state.value = _state.value.copy(timerSeconds = seconds)
+            }
+            val s = _state.value
+            if (!s.isAnswered) {
+                _state.value = s.copy(
+                    isAnswered = true,
+                    isCorrect  = false,
+                    isFinished = true,
+                    elapsedMs  = System.currentTimeMillis() - s.startTimeMs
+                )
+            }
+        }
     }
 }
