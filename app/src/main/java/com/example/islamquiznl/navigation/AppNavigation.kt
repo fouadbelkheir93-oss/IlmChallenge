@@ -115,13 +115,7 @@ fun AppNavigation(vm: QuizViewModel = viewModel()) {
 
         composable(Routes.CHALLENGE_RESULT) {
             ChallengeResultScreen(
-                vm                  = challengeVm,
-                onPlayAgainSameCode = {
-                    val code = challengeVm.state.value.code
-                    navController.navigate("challenge_quiz/$code") {
-                        popUpTo(Routes.FRIEND_CHALLENGE)
-                    }
-                },
+                vm        = challengeVm,
                 onNewCode = {
                     navController.navigate(Routes.FRIEND_CHALLENGE) {
                         popUpTo(Routes.FRIEND_CHALLENGE) { inclusive = true }
