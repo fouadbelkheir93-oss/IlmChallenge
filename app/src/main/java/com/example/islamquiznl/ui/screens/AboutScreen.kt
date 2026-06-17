@@ -48,7 +48,7 @@ fun AboutScreen(onBack: () -> Unit) {
                 Text("☪", fontSize = 48.sp, color = GoldPrimary,
                     modifier = Modifier.align(Alignment.CenterHorizontally))
                 Text(
-                    "Islam Quiz NL",
+                    "IlmChallenge",
                     color = GoldPrimary,
                     style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
                     modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -56,29 +56,20 @@ fun AboutScreen(onBack: () -> Unit) {
 
                 AboutCard(
                     title = "Doel van de app",
-                    body  = "Islam Quiz NL is bedoeld om islamitische kennis op een leerzame en toegankelijke manier te testen. De app is geschikt voor moslims van alle niveaus die hun kennis willen verbreden over onderwerpen als de Qur'an, hadith, het gebed, de profeten en islamitisch karakter."
+                    body  = "IlmChallenge is bedoeld om islamitische kennis op een leerzame en toegankelijke manier te testen. De app is geschikt voor moslims van alle niveaus die hun kennis willen verbreden over onderwerpen als de Qur'an, hadith, het gebed, de profeten en islamitisch karakter."
                 )
-
                 AboutCard(
                     title = "Geen vervanging voor onderwijs",
                     body  = "Deze app is geen vervanging voor authentiek islamitisch onderwijs. De vragen zijn bedoeld als beginpunt voor leren — niet als definitieve of uitputtende bron van kennis."
                 )
-
                 AboutCard(
                     title = "Bij twijfel: raadpleeg geleerden",
                     body  = "Bij vragen over islamitische regels, fiqh of aqeedah dien je altijd betrouwbare en gekwalificeerde islamitische geleerden te raadplegen. Wat je in deze app leest is een vereenvoudigde weergave en kan niet alle nuances bevatten."
                 )
-
                 AboutCard(
                     title = "Fiqh-kwesties",
-                    body  = "Op het gebied van fiqh (islamitisch recht) bestaan soms meningsverschillen tussen de rechtsscholen. De app presenteert geen specifieke madhhab-mening als de enige waarheid. Vragen over fiqh zijn bewust algemeen en neutraal gehouden."
+                    body  = "Op het gebied van fiqh bestaan soms meningsverschillen tussen de rechtsscholen. De app presenteert geen specifieke madhhab-mening als de enige waarheid. Vragen over fiqh zijn bewust algemeen en neutraal gehouden."
                 )
-
-                AboutCard(
-                    title = "Geen echt geld",
-                    body  = "De punten in deze app zijn puur voor de lering en het spelplezier. Er worden geen echte geldprijzen uitgekeerd. Deelname is geheel vrijblijvend."
-                )
-
                 AboutCard(
                     title = "Privacy",
                     body  = "De app verzamelt geen persoonlijke gegevens. Scores worden alleen lokaal op jouw apparaat opgeslagen."
@@ -86,7 +77,7 @@ fun AboutScreen(onBack: () -> Unit) {
 
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    "Versie 1.0 • Islam Quiz NL",
+                    "Versie 1.0 • IlmChallenge",
                     color = Color.White.copy(alpha = 0.3f),
                     style = MaterialTheme.typography.labelSmall,
                     modifier = Modifier.align(Alignment.CenterHorizontally)

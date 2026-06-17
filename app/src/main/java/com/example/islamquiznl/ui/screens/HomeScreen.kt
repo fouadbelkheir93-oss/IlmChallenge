@@ -31,9 +31,7 @@ fun HomeScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(listOf(NavyDeep, NavyMid, Color(0xFF0F2E55)))
-            )
+            .background(Brush.verticalGradient(listOf(NavyDeep, NavyMid, Color(0xFF0F2E55))))
     ) {
         Column(
             modifier = Modifier.fillMaxSize().padding(24.dp),
@@ -43,7 +41,7 @@ fun HomeScreen(
             Text("☪", fontSize = 60.sp, color = GoldPrimary)
             Spacer(Modifier.height(8.dp))
             Text(
-                "Islam Quiz NL",
+                "IlmChallenge",
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontWeight = FontWeight.Bold, color = GoldPrimary, letterSpacing = 1.sp
                 )
@@ -66,19 +64,13 @@ fun HomeScreen(
                 Text("Start quiz", fontWeight = FontWeight.Bold, fontSize = 18.sp)
             }
             Spacer(Modifier.height(16.dp))
-            HomeMenuButton(Icons.Default.Category,  "Categorieën",    onCategories)
+            HomeMenuButton(Icons.Default.Category,  "Categorieën",        onCategories)
             Spacer(Modifier.height(12.dp))
-            HomeMenuButton(Icons.Default.Today,     "Dagelijkse vraag", onDailyQuestion)
+            HomeMenuButton(Icons.Default.People,    "Daag je vriend uit", onDailyQuestion)
             Spacer(Modifier.height(12.dp))
-            HomeMenuButton(Icons.Default.Settings,  "Instellingen",   onSettings)
+            HomeMenuButton(Icons.Default.Settings,  "Instellingen",       onSettings)
             Spacer(Modifier.height(12.dp))
-            HomeMenuButton(Icons.Default.Info,      "Over de app",    onAbout)
-            Spacer(Modifier.height(32.dp))
-            Text(
-                "Geen echt geld — alleen punten ter lering",
-                style = MaterialTheme.typography.labelSmall.copy(color = Color.White.copy(alpha = 0.4f)),
-                textAlign = TextAlign.Center
-            )
+            HomeMenuButton(Icons.Default.Info,      "Over de app",        onAbout)
         }
     }
 }
