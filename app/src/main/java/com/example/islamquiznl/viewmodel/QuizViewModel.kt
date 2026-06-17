@@ -46,7 +46,7 @@ data class QuizState(
     val hintText: String            = "",
     val showImam: Boolean           = false,
     val imamText: String            = "",
-    val timerSeconds: Int           = 60,
+    val timerSeconds: Int           = 30,
     val usedIds: Set<Int>           = emptySet()
 ) {
     val currentQuestion: Question? get() = questions.getOrNull(currentIndex)
@@ -77,7 +77,7 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
         timerJob?.cancel()
         val questions = repo.buildRound(category)
         val usedIds   = questions.map { it.id }.toSet()
-        _state.value  = QuizState(questions = questions, usedIds = usedIds, timerSeconds = 60)
+        _state.value  = QuizState(questions = questions, usedIds = usedIds, timerSeconds = 30)
         maybeStartTimer()
     }
 
@@ -121,7 +121,7 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
             hiddenAnswers   = emptySet(),
             showHint        = false,
             showImam        = false,
-            timerSeconds    = 60
+            timerSeconds    = 30
         )
         maybeStartTimer()
     }
@@ -165,7 +165,7 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
             showHint        = false,
             showImam        = false,
             usedIds         = s.usedIds + replacement.id,
-            timerSeconds    = 60
+            timerSeconds    = 30
         )
         maybeStartTimer()
     }
@@ -183,7 +183,7 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
     private fun startTimer() {
         timerJob?.cancel()
         timerJob = viewModelScope.launch {
-            var seconds = 60
+            var seconds = 30
             while (seconds > 0) {
                 delay(1_000)
                 seconds--
