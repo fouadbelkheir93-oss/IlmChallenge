@@ -11,16 +11,16 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 data class ChallengeState(
-    val code: String                 = "",
-    val questions: List<Question>    = emptyList(),
-    val currentIndex: Int            = 0,
-    val selectedAnswer: Int?         = null,
-    val isAnswered: Boolean          = false,
-    val isCorrect: Boolean           = false,
-    val isFinished: Boolean          = false,
-    val correctCount: Int            = 0,
-    val startTimeMs: Long            = 0L,
-    val elapsedMs: Long              = 0L
+    val code: String              = "",
+    val questions: List<Question> = emptyList(),
+    val currentIndex: Int         = 0,
+    val selectedAnswer: Int?      = null,
+    val isAnswered: Boolean       = false,
+    val isCorrect: Boolean        = false,
+    val isFinished: Boolean       = false,
+    val correctCount: Int         = 0,
+    val startTimeMs: Long         = 0L,
+    val elapsedMs: Long           = 0L
 ) {
     val currentQuestion: Question? get() = questions.getOrNull(currentIndex)
     val questionNumber: Int        get() = currentIndex + 1
@@ -32,37 +32,34 @@ class ChallengeViewModel(application: Application) : AndroidViewModel(applicatio
     private val _state = MutableStateFlow(ChallengeState())
     val state: StateFlow<ChallengeState> = _state.asStateFlow()
 
-    /** Bouw challenge-vragenlijst op basis van code als seed. */
+    private fun seededShuffle(list: List<Question>, rng: java.util.Random): List<Question> {
+        val result = list.toMutableList()
+        for (i in result.size - 1 downTo 1) {
+            val j = rng.nextInt(i + 1)
+            val tmp = result[i]; result[i] = result[j]; result[j] = tmp
+        }
+        return result
+    }
+
     fun startChallenge(code: String) {
         val normalized = ChallengeCodeUtils.normalize(code)
         val seed       = ChallengeCodeUtils.toSeed(normalized)
         val rng        = java.util.Random(seed)
 
-        val all = QuestionBankNl.questions
+        val all    = QuestionBankNl.questions
+        val easy   = all.filter { it.difficulty == Difficulty.EASY   }
+        val medium = all.filter { it.difficulty == Difficulty.MEDIUM }
+        val hard   = all.filter { it.difficulty == Difficulty.HARD   }
 
-        // Splits per moeilijkheid
-        val easy   = all.filter { it.difficulty == Difficulty.EASY   }.toMutableList()
-        val medium = all.filter { it.difficulty == Difficulty.MEDIUM }.toMutableList()
-        val hard   = all.filter { it.difficulty == Difficulty.HARD   }.toMutableList()
+        val shuffledEasy   = seededShuffle(easy,   rng).take(10)
+        val shuffledMedium = seededShuffle(medium, rng).take(20)
+        val shuffledHard   = seededShuffle(hard,   rng).take(20)
 
-        // Shuffle deterministisch met seed
-        fun <T> MutableList<T>.seededShuffle(): List<T> {
-            for (i in size - 1 downTo 1) {
-                val j = (rng.nextInt(i + 1))
-                val tmp = this[i]; this[i] = this[j]; this[j] = tmp
-            }
-            return this.toList()
-        }
-
-        val shuffledEasy   = easy.seededShuffle().take(10)
-        val shuffledMedium = medium.seededShuffle().take(20)
-        val shuffledHard   = hard.seededShuffle().take(20)
-
-        // Vul aan als te weinig
         val usedIds = (shuffledEasy + shuffledMedium + shuffledHard).map { it.id }.toMutableSet()
+
         fun fillUp(list: List<Question>, needed: Int): List<Question> {
             if (list.size >= needed) return list
-            val extra = all.filter { it.id !in usedIds }.seededShuffle().take(needed - list.size)
+            val extra = seededShuffle(all.filter { it.id !in usedIds }, rng).take(needed - list.size)
             usedIds.addAll(extra.map { it.id })
             return list + extra
         }
@@ -104,7 +101,6 @@ class ChallengeViewModel(application: Application) : AndroidViewModel(applicatio
 
         val nextIndex = s.currentIndex + 1
         if (nextIndex >= s.questions.size) {
-            // Alle vragen afgerond
             _state.value = s.copy(
                 currentIndex = nextIndex,
                 isFinished   = true,
@@ -121,7 +117,6 @@ class ChallengeViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun resetWithSameCode() {
-        val code = _state.value.code
-        startChallenge(code)
+        startChallenge(_state.value.code)
     }
 }
