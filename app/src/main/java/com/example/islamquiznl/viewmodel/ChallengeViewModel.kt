@@ -23,6 +23,7 @@ data class ChallengeState(
     val isCorrect: Boolean        = false,
     val isFinished: Boolean       = false,
     val correctCount: Int         = 0,
+    val points: Int               = 0,
     val startTimeMs: Long         = 0L,
     val elapsedMs: Long           = 0L,
     val timerSeconds: Int         = 30
@@ -96,11 +97,20 @@ class ChallengeViewModel(application: Application) : AndroidViewModel(applicatio
         val correct = index == q.correctAnswerIndex
         val elapsed = System.currentTimeMillis() - s.startTimeMs
 
+        // Punten per moeilijkheid
+        val pointsEarned = if (correct) when (q.difficulty.name) {
+            "EASY"   -> 100
+            "MEDIUM" -> 300
+            "HARD"   -> 600
+            else     -> 100
+        } else 0
+
         _state.value = s.copy(
             selectedAnswer = index,
             isAnswered     = true,
             isCorrect      = correct,
             correctCount   = if (correct) s.correctCount + 1 else s.correctCount,
+            points         = s.points + pointsEarned,
             isFinished     = !correct,
             elapsedMs      = if (!correct) elapsed else s.elapsedMs
         )
