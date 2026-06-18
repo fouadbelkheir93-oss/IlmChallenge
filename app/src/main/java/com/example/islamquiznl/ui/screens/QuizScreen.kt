@@ -38,6 +38,7 @@ fun QuizScreen(vm: QuizViewModel, onGameEnd: () -> Unit, onBack: () -> Unit) {
 
     // ── Timer geluid ───────────────────────────────────────────────────────────
     val timerSoundPlayer = remember { TimerSoundPlayer() }
+    val wrongSoundPlayed = remember { mutableStateOf(false) }
 
     DisposableEffect(Unit) {
         onDispose { timerSoundPlayer.release() }
@@ -46,6 +47,7 @@ fun QuizScreen(vm: QuizViewModel, onGameEnd: () -> Unit, onBack: () -> Unit) {
     // Reset geluid bij nieuwe vraag
     LaunchedEffect(state.currentIndex) {
         timerSoundPlayer.reset()
+        wrongSoundPlayed.value = false
     }
 
     // Speel tik af bij laatste 10 seconden
@@ -60,6 +62,16 @@ fun QuizScreen(vm: QuizViewModel, onGameEnd: () -> Unit, onBack: () -> Unit) {
                 state.timerSeconds == 0 ->
                     timerSoundPlayer.playTimeUp(soundEnabled = true)
             }
+        }
+    }
+
+    // Fout-antwoord geluid
+    LaunchedEffect(state.isAnswered, state.isGameOver, state.timerSeconds, state.currentIndex) {
+        val isWrongAnswer = state.isAnswered && state.isGameOver
+        val isTimeUp      = state.timerSeconds == 0 && !state.isAnswered
+        if (!wrongSoundPlayed.value && (isWrongAnswer || isTimeUp) && timerEnabled) {
+            timerSoundPlayer.playWrongAnswer(soundEnabled = true)
+            wrongSoundPlayed.value = true
         }
     }
 

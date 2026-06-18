@@ -26,7 +26,8 @@ fun HomeScreen(
     onCategories: () -> Unit,
     onDailyQuestion: () -> Unit,
     onSettings: () -> Unit,
-    onAbout: () -> Unit
+    onAbout: () -> Unit,
+    bestScore: Int = 0
 ) {
     Box(
         modifier = Modifier
@@ -51,7 +52,34 @@ fun HomeScreen(
                 style = MaterialTheme.typography.bodyMedium.copy(color = Color.White.copy(alpha = 0.7f)),
                 textAlign = TextAlign.Center
             )
-            Spacer(Modifier.height(48.dp))
+
+            Spacer(Modifier.height(20.dp))
+
+            // Beste score badge
+            if (bestScore > 0) {
+                Surface(
+                    shape = RoundedCornerShape(16.dp),
+                    color = GoldPrimary.copy(alpha = 0.12f)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text("🏆", fontSize = 16.sp)
+                        Spacer(Modifier.width(8.dp))
+                        Text(
+                            "Beste score: ${formatScoreHome(bestScore)} punten",
+                            color = GoldPrimary,
+                            fontWeight = FontWeight.SemiBold,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
+            }
+
+            Spacer(Modifier.height(24.dp))
+
             Button(
                 onClick = onStartQuiz,
                 modifier = Modifier.fillMaxWidth().height(56.dp),
@@ -73,6 +101,12 @@ fun HomeScreen(
             HomeMenuButton(Icons.Default.Info,      "Over de app",        onAbout)
         }
     }
+}
+
+private fun formatScoreHome(score: Int): String = when {
+    score >= 1_000_000 -> "1.000.000"
+    score >= 1_000     -> "${score / 1_000}.${String.format("%03d", score % 1_000)}"
+    else               -> score.toString()
 }
 
 @Composable

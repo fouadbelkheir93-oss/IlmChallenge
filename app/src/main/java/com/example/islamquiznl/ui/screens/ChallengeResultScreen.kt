@@ -37,63 +37,46 @@ fun ChallengeResultScreen(
         Column(
             modifier = Modifier.fillMaxWidth().padding(28.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             Text("⚡", fontSize = 56.sp)
 
-            Text(
-                "Challenge klaar!",
-                color = GoldPrimary,
-                fontSize = 26.sp,
-                fontWeight = FontWeight.Bold
-            )
+            Text("Challenge klaar!", color = GoldPrimary, fontSize = 26.sp,
+                fontWeight = FontWeight.Bold)
 
-            // Code weergave
-            Surface(
-                shape = RoundedCornerShape(12.dp),
-                color = GoldPrimary.copy(alpha = 0.15f)
-            ) {
-                Text(
-                    state.code,
+            // Code
+            Surface(shape = RoundedCornerShape(12.dp), color = GoldPrimary.copy(alpha = 0.15f)) {
+                Text(state.code,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp),
-                    color = GoldPrimary,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 22.sp,
-                    letterSpacing = 4.sp
-                )
+                    color = GoldPrimary, fontWeight = FontWeight.Bold,
+                    fontSize = 22.sp, letterSpacing = 4.sp)
             }
 
             // Resultaat kaart
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.08f))
-            ) {
-                Column(modifier = Modifier.padding(24.dp)) {
-                    ResultRowChallenge("Goede antwoorden", "${state.correctCount}", GoldPrimary)
+            Card(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.08f))) {
+                Column(modifier = Modifier.padding(20.dp)) {
+                    ResultRowC("Goede antwoorden", "${state.correctCount}", GoldPrimary)
                     Spacer(Modifier.height(10.dp))
-                    ResultRowChallenge("Bereikte vraag",   "${state.questionNumber}", Color.White)
+                    ResultRowC("Bereikte vraag",   "${state.questionNumber}", Color.White)
                     Spacer(Modifier.height(10.dp))
-                    ResultRowChallenge("Totale tijd",      timeStr, GreenIslamic)
+                    ResultRowC("Punten",           "${state.points}", GoldLight)
+                    Spacer(Modifier.height(10.dp))
+                    ResultRowC("Totale tijd",      timeStr, GreenIslamic)
                 }
             }
 
-            // Uitleg vergelijking
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(14.dp),
-                colors = CardDefaults.cardColors(containerColor = GoldPrimary.copy(alpha = 0.08f))
-            ) {
+            // Winnaar uitleg
+            Card(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(14.dp),
+                colors = CardDefaults.cardColors(containerColor = GoldPrimary.copy(alpha = 0.08f))) {
                 Text(
                     "Vergelijk dit met je vriend.\nHoogste aantal goede antwoorden wint.\nBij gelijkspel wint de snelste tijd.",
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.padding(14.dp),
                     color = GoldPrimary.copy(alpha = 0.9f),
                     style = MaterialTheme.typography.bodySmall.copy(lineHeight = 20.sp),
                     textAlign = TextAlign.Center
                 )
             }
-
-            Spacer(Modifier.height(4.dp))
 
             // Knoppen
             Button(
@@ -119,12 +102,10 @@ fun ChallengeResultScreen(
 }
 
 @Composable
-private fun ResultRowChallenge(label: String, value: String, valueColor: Color) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
+private fun ResultRowC(label: String, value: String, valueColor: Color) {
+    Row(modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+        verticalAlignment = Alignment.CenterVertically) {
         Text(label, color = Color.White.copy(alpha = 0.7f),
             style = MaterialTheme.typography.bodyMedium)
         Text(value, color = valueColor, fontWeight = FontWeight.Bold,
