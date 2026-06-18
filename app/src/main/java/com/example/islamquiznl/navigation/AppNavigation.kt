@@ -25,12 +25,14 @@ fun AppNavigation(vm: QuizViewModel = viewModel()) {
 
         // ── Home ───────────────────────────────────────────────────────────────
         composable(Routes.HOME) {
+            val bestScore by vm.bestScore.collectAsState()
             HomeScreen(
                 onStartQuiz     = { vm.startQuiz(); navController.navigate(Routes.QUIZ) },
                 onCategories    = { navController.navigate(Routes.CATEGORIES) },
                 onDailyQuestion = { navController.navigate(Routes.FRIEND_CHALLENGE) },
                 onSettings      = { navController.navigate(Routes.SETTINGS) },
-                onAbout         = { navController.navigate(Routes.ABOUT) }
+                onAbout         = { navController.navigate(Routes.ABOUT) },
+                bestScore       = bestScore
             )
         }
 
