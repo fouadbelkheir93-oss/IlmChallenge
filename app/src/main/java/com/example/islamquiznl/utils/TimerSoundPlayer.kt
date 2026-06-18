@@ -30,6 +30,11 @@ class TimerSoundPlayer {
         toneGenerator?.startTone(ToneGenerator.TONE_PROP_NACK, 500)
     }
 
+    fun playWin(soundEnabled: Boolean) {
+        if (!soundEnabled) return
+        toneGenerator?.startTone(ToneGenerator.TONE_PROP_ACK, 700)
+    }
+
     fun reset() {
         lastPlayedSecond = null
     }
