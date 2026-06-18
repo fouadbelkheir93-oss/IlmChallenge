@@ -16,22 +16,18 @@ class TimerSoundPlayer {
         if (!soundEnabled) return
         if (remainingSeconds !in 1..10) return
         if (lastPlayedSecond == remainingSeconds) return
-
         lastPlayedSecond = remainingSeconds
-
-        toneGenerator?.startTone(
-            ToneGenerator.TONE_PROP_BEEP,
-            80
-        )
+        toneGenerator?.startTone(ToneGenerator.TONE_PROP_BEEP, 80)
     }
 
     fun playTimeUp(soundEnabled: Boolean) {
         if (!soundEnabled) return
+        toneGenerator?.startTone(ToneGenerator.TONE_PROP_NACK, 250)
+    }
 
-        toneGenerator?.startTone(
-            ToneGenerator.TONE_PROP_NACK,
-            250
-        )
+    fun playWrongAnswer(soundEnabled: Boolean) {
+        if (!soundEnabled) return
+        toneGenerator?.startTone(ToneGenerator.TONE_PROP_NACK, 500)
     }
 
     fun reset() {
