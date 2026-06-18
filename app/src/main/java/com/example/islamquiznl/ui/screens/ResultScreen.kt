@@ -16,6 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.islamquiznl.ui.*
+import com.example.islamquiznl.utils.TimerSoundPlayer
 import com.example.islamquiznl.viewmodel.QuizViewModel
 
 @Composable
@@ -23,9 +24,24 @@ fun ResultScreen(vm: QuizViewModel, onPlayAgain: () -> Unit, onHome: () -> Unit)
     val state     by vm.state.collectAsState()
     val bestScore by vm.bestScore.collectAsState()
 
-    val won   = state.isWon
-    val score = state.score
+    val won     = state.isWon
+    val score   = state.score
     val correct = state.correctCount
+
+    // ── Win geluid ─────────────────────────────────────────────────────────────
+    val timerSoundPlayer = remember { TimerSoundPlayer() }
+    val winSoundPlayed   = remember { mutableStateOf(false) }
+
+    DisposableEffect(Unit) {
+        onDispose { timerSoundPlayer.release() }
+    }
+
+    LaunchedEffect(won, correct) {
+        if (won && correct == 15 && !winSoundPlayed.value) {
+            timerSoundPlayer.playWin(soundEnabled = true)
+            winSoundPlayed.value = true
+        }
+    }
 
     Box(
         modifier = Modifier
