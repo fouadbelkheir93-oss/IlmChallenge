@@ -1,5 +1,6 @@
 package com.example.islamquiznl.ui.screens
 
+import android.media.MediaPlayer
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,35 +12,47 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.islamquiznl.R
 import com.example.islamquiznl.ui.*
-import com.example.islamquiznl.utils.TimerSoundPlayer
 import com.example.islamquiznl.viewmodel.QuizViewModel
 
 @Composable
 fun ResultScreen(vm: QuizViewModel, onPlayAgain: () -> Unit, onHome: () -> Unit) {
     val state     by vm.state.collectAsState()
     val bestScore by vm.bestScore.collectAsState()
+    val context   = LocalContext.current
 
     val won     = state.isWon
     val score   = state.score
     val correct = state.correctCount
 
-    // ── Win geluid ─────────────────────────────────────────────────────────────
-    val timerSoundPlayer = remember { TimerSoundPlayer() }
-    val winSoundPlayed   = remember { mutableStateOf(false) }
+    // ── Win geluid (alleen bij 15/15 in normale quiz) ──────────────────────────
+    val winSoundPlayed = remember { mutableStateOf(false) }
+    val mediaPlayer    = remember { mutableStateOf<MediaPlayer?>(null) }
 
     DisposableEffect(Unit) {
-        onDispose { timerSoundPlayer.release() }
+        onDispose {
+            mediaPlayer.value?.release()
+            mediaPlayer.value = null
+        }
     }
 
     LaunchedEffect(won, correct) {
         if (won && correct == 15 && !winSoundPlayed.value) {
-            timerSoundPlayer.playWin(soundEnabled = true)
             winSoundPlayed.value = true
+            try {
+                val mp = MediaPlayer.create(context, R.raw.win_sound)
+                mp?.setOnCompletionListener { it.release() }
+                mp?.start()
+                mediaPlayer.value = mp
+            } catch (e: Exception) {
+                // Geluid niet beschikbaar, stilletjes overslaan
+            }
         }
     }
 
