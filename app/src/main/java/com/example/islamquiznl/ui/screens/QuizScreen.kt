@@ -75,9 +75,9 @@ fun QuizScreen(vm: QuizViewModel, onGameEnd: () -> Unit, onBack: () -> Unit) {
         }
     }
 
-    LaunchedEffect(state.isGameOver, state.isWon) {
-        if (state.isGameOver || state.isWon) {
-            kotlinx.coroutines.delay(2000)
+    LaunchedEffect(state.isWon) {
+        if (state.isWon) {
+            kotlinx.coroutines.delay(1500)
             onGameEnd()
         }
     }
@@ -337,20 +337,38 @@ fun QuizScreen(vm: QuizViewModel, onGameEnd: () -> Unit, onBack: () -> Unit) {
                     }
                 }
 
-                // Volgende vraag knop (alleen als nog niet game over / won)
-                if (!state.isGameOver && !state.isWon) {
-                    Spacer(Modifier.height(16.dp))
-                    Button(
-                        onClick = { vm.nextQuestion() },
-                        modifier = Modifier.fillMaxWidth().height(50.dp),
-                        shape = RoundedCornerShape(25.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = GoldPrimary,
-                            contentColor   = NavyDeep
-                        )
-                    ) {
-                        Text("Volgende vraag →", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                // Knoppen na antwoord
+                Spacer(Modifier.height(16.dp))
+                when {
+                    state.isGameOver -> {
+                        // Fout antwoord: toon "Bekijk resultaat"
+                        Button(
+                            onClick = onGameEnd,
+                            modifier = Modifier.fillMaxWidth().height(50.dp),
+                            shape = RoundedCornerShape(25.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = ErrorRed,
+                                contentColor   = Color.White
+                            )
+                        ) {
+                            Text("Bekijk resultaat →", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                        }
                     }
+                    !state.isWon -> {
+                        // Goed antwoord, nog niet klaar: volgende vraag
+                        Button(
+                            onClick = { vm.nextQuestion() },
+                            modifier = Modifier.fillMaxWidth().height(50.dp),
+                            shape = RoundedCornerShape(25.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = GoldPrimary,
+                                contentColor   = NavyDeep
+                            )
+                        ) {
+                            Text("Volgende vraag →", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                        }
+                    }
+                    // isWon: automatisch navigeren via LaunchedEffect
                 }
             }
 
